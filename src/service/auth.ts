@@ -35,6 +35,20 @@ class AuthService {
       console.error(error)
     }
   }
+
+  async registryUser(data: { name: string; telephone: string; email: string; password: string }) {
+    try {
+      const response = await this.axiosIstance.post('/auth/register', data)
+
+      if (response.data) {
+        return response.data
+      }
+
+      return response
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const authService = new AuthService(api)

@@ -36,11 +36,24 @@
       ElMessage({ message: 'Đăng nhập thành công', type: 'success' })
 
       router.push({ name: 'alert' })
+
+      return
     }
 
-    // return authService.getProfile(formRegister).then((data) => {
-    //   if (data) isLogin.value = true
-    // })
+    const res = await authService.registryUser(formRegister)
+    if (!res) return
+
+    ElMessage({ message: 'Đăng ký thành công', type: 'success' })
+
+    isLogin.value = true
+
+    Object.keys(formRegister).forEach((key) => {
+      formRegister[key] = ''
+    })
+
+    Object.keys(formLogin).forEach((key) => {
+      formLogin[key] = ''
+    })
   }
 </script>
 
