@@ -131,7 +131,7 @@
           <Button label="Forgot Password ?" variant="text" />
 
           <Button
-            :label="isLogin ? 'Register ?' : ' Login ?'"
+            :label="isLogin ? 'Register' : ' Login'"
             severity="secondary"
             outlined
             @click="isLogin = !isLogin"
