@@ -23,6 +23,7 @@ export const sidebars: ISidebar[] = [
         name: 'project',
         key: 'project',
         icon: 'project',
+        admin: true,
       },
     ],
   },
