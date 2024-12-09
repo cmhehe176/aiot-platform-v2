@@ -131,12 +131,12 @@
           <Button label="Forgot Password ?" variant="text" />
 
           <Button
-            :label="isLogin ? 'Register' : ' Login'"
+            :label="isLogin ? 'Register ?' : ' Login ?'"
             severity="secondary"
             outlined
             @click="isLogin = !isLogin"
           />
-          <Button :label="isLogin ? 'Sign In' : 'Sign Up'" severity="info" @click="onSubmit" />
+          <Button :label="isLogin ? 'Sign' : 'Sign Up'" severity="info" @click="onSubmit" />
         </div>
       </template>
     </Card>
