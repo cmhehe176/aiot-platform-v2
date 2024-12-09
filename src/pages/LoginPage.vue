@@ -76,7 +76,6 @@
                 :feedback="false"
                 toggleMask
                 class="password w-full"
-                @keyup="onSubmit"
               />
               <label for="password">Password</label>
             </FloatLabel>
