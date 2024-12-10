@@ -59,9 +59,9 @@
       </IftaLabel>
 
       <Button class="my-9" variant="text" severity="secondary" @click="isAddProject = true">
-        <span class="text-xl font-bold" v-if="deviceDetail.project">
+        <span class="font-bold" v-if="form.project?.name || deviceDetail.project">
           Project :
-          <Button variant="text" class="font-bold" severity="info">
+          <Button variant="text" class="text-xl font-bold" severity="info">
             {{ form.project?.name || deviceDetail.project.name }}
           </Button>
         </span>
