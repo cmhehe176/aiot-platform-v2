@@ -1,5 +1,7 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import AlertItem from '@/component/Alert/AlertItem.vue'
+</script>
 
-<template>alert</template>
+<template><AlertItem /></template>
 
 <style lang="scss" scoped></style>
