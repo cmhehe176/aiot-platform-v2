@@ -22,29 +22,29 @@
   const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color')
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
 
-  const chartData = ref({
-    labels: [],
+  const chartData = computed(() => ({
+    labels: messageDevice.map((device) => device.name),
     datasets: [
       {
         label: 'object',
         backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
         borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        data: [],
+        data: messageDevice.map((device) => device.object),
       },
       {
         label: 'sensor',
         backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
         borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-        data: [],
+        data: messageDevice.map((device) => device.sensor),
       },
       {
         label: 'notification',
         backgroundColor: documentStyle.getPropertyValue('--p-text-500'),
         borderColor: documentStyle.getPropertyValue('--p-text-500'),
-        data: [],
+        data: messageDevice.map((device) => device.notification),
       },
     ],
-  })
+  }))
 
   const chartOptions = ref({
     maintainAspectRatio: false,
@@ -80,22 +80,6 @@
       },
     },
   })
-
-  watch(
-    () => messageDevice,
-    (newValue) => {
-      chartData.value.labels = newValue.map((i) => i.name || 'inValidName')
-
-      chartData.value.datasets.map((d) => {
-        if (d.label === 'object') return (d.data = newValue.map((value) => value.object))
-
-        if (d.label === 'notification')
-          return (d.data = newValue.map((value) => value.notification))
-
-        if (d.label === 'sensor') return (d.data = newValue.map((value) => value.sensor))
-      })
-    },
-  )
 </script>
 
 <template>

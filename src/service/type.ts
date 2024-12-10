@@ -8,3 +8,34 @@ export interface getMessageParams {
   device_id?: number
   project_id: number
 }
+
+export interface DashboardResponse {
+  messageDevice: {
+    id: number
+    projectId: number
+    name: string
+    object: number
+    sensor: number
+    notification: number
+  }[]
+  statusDevice: {
+    total: number
+    deviceActive: number
+    deviceInActive: number
+  }
+  typeDetect: {
+    id: number
+    projectId: number
+    name: string
+    human: number
+    vehicle: number
+    all: number
+  }[]
+  notificationType: {
+    id: number
+    projectId: number
+    name: string
+    object: number
+    sensor: number
+  }[]
+}

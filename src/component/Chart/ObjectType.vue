@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted, watch } from 'vue'
+  import { ref, onMounted, watch, computed } from 'vue'
 
   type TObjectType = {
     id: number
@@ -12,42 +12,38 @@
 
   const { objectType } = defineProps<{ objectType: TObjectType[] }>()
 
-  const chartData = ref()
+  const chartData = computed(() => ({
+    labels: objectType.map((object) => object.name || 'inValidName'),
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Both Detect',
+        backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
+        borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+        data: objectType.map((object) => object.all),
+        stack: 'group1',
+      },
+      {
+        type: 'bar',
+        label: 'Human',
+        backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
+        borderColor: documentStyle.getPropertyValue('--p-gray-500'),
+        data: objectType.map((object) => object.human),
+        stack: 'group2',
+      },
+      {
+        type: 'bar',
+        label: 'Vehicle',
+        backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
+        borderColor: documentStyle.getPropertyValue('--p-orange-500'),
+        data: objectType.map((object) => object.vehicle),
+        stack: 'group2',
+      },
+    ],
+  }))
   const chartOptions = ref()
 
-  const setChartData = (objectType: TObjectType[]) => {
-    const documentStyle = getComputedStyle(document.documentElement)
-
-    return {
-      labels: objectType.map((object) => object.name || 'inValidName'),
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Both Detect',
-          backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-          borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-          data: objectType.map((object) => object.all),
-          stack: 'group1',
-        },
-        {
-          type: 'bar',
-          label: 'Human',
-          backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-          borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-          data: objectType.map((object) => object.human),
-          stack: 'group2',
-        },
-        {
-          type: 'bar',
-          label: 'Vehicle',
-          backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
-          borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-          data: objectType.map((object) => object.vehicle),
-          stack: 'group2',
-        },
-      ],
-    }
-  }
+  const documentStyle = getComputedStyle(document.documentElement)
 
   const setChartOptions = () => {
     const documentStyle = getComputedStyle(document.documentElement)
@@ -92,15 +88,7 @@
     }
   }
 
-  watch(
-    () => objectType,
-    (newValue) => {
-      chartData.value = setChartData(newValue)
-    },
-  )
-
   onMounted(() => {
-    // chartData.value = setChartData()
     chartOptions.value = setChartOptions()
   })
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useAuthStore } from '@/stores/auth'
-  import { ref, watch } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
   import FilterProject from '@/component/FilterProject.vue'
   import MessageChart from '@/component/Chart/MessageDevice.vue'
   import { dashboardService } from '@/service/dashboard'
@@ -8,27 +8,36 @@
   import StatusDevice from '@/component/Chart/StatusDevice.vue'
   import ObjectType from '@/component/Chart/ObjectType.vue'
   import NotificationType from '@/component/Chart/NotificationType.vue'
+  import type { DashboardResponse } from '@/service/type'
 
   const { isAdmin } = storeToRefs(useAuthStore())
 
-  const dataChart = ref()
+  const dataChart = ref<DashboardResponse>()
   const modelProject = ref()
   const modelDatePicker = ref()
 
-  watch(
-    () => [modelProject.value, modelDatePicker.value],
-    async ([newProject, newDatePicker]) => {
-      const res = await dashboardService.getDashboard({
-        projectId: newProject === -1 ? undefined : newProject,
-        startDate: newDatePicker ? newDatePicker[0] : undefined,
-        endDate: newDatePicker ? newDatePicker[1] : undefined,
-      })
+  const handleFetchDashboard = async (projectId?: number, datePicker?: any[]) => {
+    const res = await dashboardService.getDashboard({
+      projectId: projectId === -1 ? undefined : projectId,
+      startDate: datePicker ? datePicker[0] : undefined,
+      endDate: datePicker ? datePicker[1] : undefined,
+    })
 
-      if (!res) return
+    if (!res) return
 
-      dataChart.value = res
-    },
-  )
+    dataChart.value = res
+
+    console.log(dataChart.value)
+  }
+
+  // watch(
+  //   () => [modelProject.value, modelDatePicker.value],
+  //   ([newProject, newDatePicker]) => handleFetchDashboard(newProject, newDatePicker),
+  // )
+
+  onMounted(async () => {
+    await handleFetchDashboard(modelProject.value)
+  })
 </script>
 
 <template>
@@ -37,17 +46,22 @@
       class="p-1 w-full"
       v-model:project="modelProject"
       v-model:date-picker="modelDatePicker"
+      :filter="{ project: true, datePicker: true, typeObject: true }"
+      @project="handleFetchDashboard(modelProject, modelDatePicker)"
+      @date-picker="handleFetchDashboard(modelProject, modelDatePicker)"
     />
 
     <div class="flex gap-20 flex-wrap mt-10">
-      <MessageChart :message-device="dataChart?.messageDevice" />
-      <StatusDevice :status-device="dataChart?.statusDevice" />
-      <ObjectType :object-type="dataChart?.typeDetect" />
-      <NotificationType :notification-type="dataChart?.notificationType" />
-      <NotificationType :notification-type="dataChart?.notificationType" />
-      <NotificationType :notification-type="dataChart?.notificationType" />
-      <NotificationType :notification-type="dataChart?.notificationType" />
-      <NotificationType :notification-type="dataChart?.notificationType" />
+      <MessageChart v-if="dataChart?.messageDevice" :message-device="dataChart?.messageDevice" />
+
+      <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
+
+      <ObjectType v-if="dataChart?.typeDetect" :object-type="dataChart?.typeDetect" />
+
+      <NotificationType
+        v-if="dataChart?.notificationType"
+        :notification-type="dataChart?.notificationType"
+      />
     </div>
   </div>
 </template>

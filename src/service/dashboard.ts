@@ -1,5 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import api from './api'
+import type { DashboardResponse } from './type'
 
 class DashboardService {
   private axiosInstance: AxiosInstance
@@ -12,7 +13,7 @@ class DashboardService {
     projectId?: number
     startDate?: string | Date
     endDate?: string | Date
-  }) {
+  }): Promise<DashboardResponse> {
     try {
       const response = await this.axiosInstance.get(`/dashboard`, { params })
       if (response.data) return response.data

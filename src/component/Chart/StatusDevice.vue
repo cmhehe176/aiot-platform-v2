@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
   type TProps = {
     statusDevice: {
       total: number
@@ -23,30 +23,23 @@
       },
     },
   })
-  const chartData = ref()
 
-  const setChartData = (statusDevice) => {
-    return {
-      labels: ['Active', 'InActive'],
-      datasets: [
-        {
-          data: [statusDevice.deviceActive, statusDevice.deviceInActive],
-          backgroundColor: [
-            documentStyleBody.getPropertyValue('--p-orange-500'),
-            documentStyleBody.getPropertyValue('--p-gray-500'),
-          ],
-          hoverBackgroundColor: [
-            documentStyleBody.getPropertyValue('--p-orange-400'),
-            documentStyleBody.getPropertyValue('--p-gray-400'),
-          ],
-        },
-      ],
-    }
-  }
-  watch(
-    () => statusDevice,
-    (newValue) => (chartData.value = setChartData(newValue)),
-  )
+  const chartData = computed(() => ({
+    labels: ['Active', 'InActive'],
+    datasets: [
+      {
+        data: [statusDevice.deviceActive, statusDevice.deviceInActive],
+        backgroundColor: [
+          documentStyleBody.getPropertyValue('--p-orange-500'),
+          documentStyleBody.getPropertyValue('--p-gray-500'),
+        ],
+        hoverBackgroundColor: [
+          documentStyleBody.getPropertyValue('--p-orange-400'),
+          documentStyleBody.getPropertyValue('--p-gray-400'),
+        ],
+      },
+    ],
+  }))
 </script>
 
 <template>

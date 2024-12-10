@@ -9,6 +9,12 @@
   const { getListDeviceByProject } = useAuthStore()
   const { listProject, listDeviceByProject, isAdmin } = storeToRefs(authStore)
 
+  const { filter } = defineProps<{
+    filter: { project?: boolean; datePicker?: boolean; device?: boolean; typeObject?: boolean }
+  }>()
+
+  const emit = defineEmits(['project', 'device', 'datePicker', 'typeObject'])
+
   const projectOptions = computed(() =>
     isAdmin.value ? [{ id: -1, name: 'All' }, ...listProject.value] : listProject.value,
   )
@@ -22,6 +28,7 @@
 
   const handleChangeProject = (projectId) => {
     getListDeviceByProject(projectId)
+    emit('project')
   }
 
   onMounted(() => {
@@ -31,7 +38,7 @@
 
 <template>
   <div class="filter flex flex-wrap w-full gap-10">
-    <FloatLabel variant="on" class="md:w-52">
+    <FloatLabel v-if="filter.project" variant="on" class="md:w-52">
       <Select
         v-model="modelProject"
         inputId="project"
@@ -44,7 +51,7 @@
       <label for="project">Project</label>
     </FloatLabel>
 
-    <FloatLabel variant="on" class="md:w-52">
+    <FloatLabel v-if="filter.device" variant="on" class="md:w-52">
       <Select
         v-model="modelDevice"
         inputId="device"
@@ -56,7 +63,7 @@
       <label for="device">Device</label>
     </FloatLabel>
 
-    <FloatLabel variant="on" class="md:w-52">
+    <FloatLabel v-if="filter.datePicker" variant="on" class="md:w-52">
       <DatePicker
         v-model="modelDatePicker"
         selectionMode="range"
@@ -64,11 +71,12 @@
         class="w-full"
         dateFormat="dd/mm/yy"
         showButtonBar
+        @value-change="emit('datePicker')"
       />
       <label for="datepicker">Select Date</label>
     </FloatLabel>
 
-    <FloatLabel variant="on" class="w-36">
+    <FloatLabel v-if="filter.typeObject" variant="on" class="w-36">
       <Select
         v-model="modelTypeObject"
         inputId="type"
