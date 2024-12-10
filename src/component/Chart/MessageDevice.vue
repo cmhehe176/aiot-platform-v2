@@ -85,7 +85,7 @@
 <template>
   <div class="message-device min-w-[500px]">
     <Fieldset legend="Message Of Device" :toggleable="true">
-      <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[15rem]" />
+      <Chart type="bar" :data="chartData" :options="chartOptions" class="min-h-[15rem]" />
     </Fieldset>
   </div>
 </template>

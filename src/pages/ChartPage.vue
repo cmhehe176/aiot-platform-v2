@@ -26,18 +26,9 @@
     if (!res) return
 
     dataChart.value = res
-
-    console.log(dataChart.value)
   }
 
-  // watch(
-  //   () => [modelProject.value, modelDatePicker.value],
-  //   ([newProject, newDatePicker]) => handleFetchDashboard(newProject, newDatePicker),
-  // )
-
-  onMounted(async () => {
-    await handleFetchDashboard(modelProject.value)
-  })
+  onMounted(async () => await handleFetchDashboard(modelProject.value))
 </script>
 
 <template>
@@ -46,12 +37,12 @@
       class="p-1 w-full"
       v-model:project="modelProject"
       v-model:date-picker="modelDatePicker"
-      :filter="{ project: true, datePicker: true, typeObject: true }"
+      :filter="{ project: true, datePicker: true }"
       @project="handleFetchDashboard(modelProject, modelDatePicker)"
       @date-picker="handleFetchDashboard(modelProject, modelDatePicker)"
     />
 
-    <div class="flex gap-20 flex-wrap mt-10">
+    <div class="flex gap-24 flex-wrap mt-10">
       <MessageChart v-if="dataChart?.messageDevice" :message-device="dataChart?.messageDevice" />
 
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
