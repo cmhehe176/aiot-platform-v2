@@ -2,10 +2,11 @@
   import { useAuthStore } from '@/stores/auth'
   import { formatDate } from '@/utils/dayjs'
   import { storeToRefs } from 'pinia'
-  import { ref } from 'vue'
 
-  const { listProject } = storeToRefs(useAuthStore())
-  const { selectionMode = false } = defineProps<{ selectionMode?: boolean }>()
+  const { selectionMode = false, projects } = defineProps<{
+    selectionMode?: boolean
+    projects: any[]
+  }>()
 
   const selectedProject = defineModel()
 
@@ -17,10 +18,9 @@
     <DataTable
       stripedRows
       v-bind="_bind"
-      :value="listProject"
+      :value="projects"
       v-model:selection="selectedProject"
       tableStyle="min-width: 5rem"
-      dataKey="id"
     >
       <template #header>
         <span class="text-xl font-bold ml-8">List Project</span>

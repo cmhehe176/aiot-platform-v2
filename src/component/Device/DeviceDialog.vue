@@ -4,11 +4,14 @@
   import { reactive, ref, watch } from 'vue'
   import ListProjectTable from '../Project/ListProjectTable.vue'
   import BaseIcon from '../BaseIcon.vue'
+  import { useAuthStore } from '@/stores/auth'
+
+  const emit = defineEmits(['updateDeviceSuccess'])
+  const { listProject } = useAuthStore()
 
   const isDialog = ref<boolean>(false)
   const isAddProject = ref<boolean>(false)
   const deviceDetail = ref()
-  const emit = defineEmits(['updateDeviceSuccess'])
 
   const form = reactive({
     name: '',
@@ -89,7 +92,7 @@
         </Button>
       </template>
 
-      <ListProjectTable selectionMode v-model="form.project" />
+      <ListProjectTable selectionMode v-model="form.project" :projects="listProject" />
     </Dialog>
   </div>
 </template>
