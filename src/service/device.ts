@@ -18,7 +18,15 @@ class DeviceService {
     }
   }
 
-  updateDevice = async () => {}
+  updateDevice = async (id, payload?) => {
+    try {
+      const res = await this.axiosInstance.put(`/device/${id}`, payload)
+
+      if (res.data) return res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const deviceService = new DeviceService(api)

@@ -73,6 +73,7 @@
             <BaseIcon name="aiot" size="150" />
           </div>
 
+          <!-- Login -->
           <div v-if="isLogin" class="w-1/2 h-full flex flex-col gap-6 justify-center">
             <FloatLabel variant="on" security="info" class="w-full">
               <InputText id="username" v-model="formLogin.username" class="w-full" />
@@ -94,6 +95,7 @@
             </FloatLabel>
           </div>
 
+          <!-- Register -->
           <div v-else class="w-1/2 h-full flex flex-col gap-4">
             <FloatLabel variant="on" security="info" class="w-full">
               <InputText id="name" v-model="formRegister.name" class="w-full" />
