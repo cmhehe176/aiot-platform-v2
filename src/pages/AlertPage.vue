@@ -1,5 +1,7 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import ListProjectTable from '@/component/Project/ListProjectTable.vue'
+</script>
 
-<template>alert</template>
+<template><ListProjectTable /></template>
 
 <style lang="scss" scoped></style>

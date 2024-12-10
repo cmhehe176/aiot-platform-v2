@@ -10,6 +10,7 @@
   const { setProfile } = useAuthStore()
 
   const isLogin = ref(true)
+  const loading = ref(false)
 
   const formLogin = reactive({
     username: '',
@@ -24,6 +25,8 @@
   })
 
   const onSubmit = async () => {
+    loading.value = true
+
     if (isLogin.value) {
       const res = await authService.login(formLogin)
       if (!res) return
@@ -37,6 +40,7 @@
 
       router.push({ name: 'alert' })
 
+      loading.value = false
       return
     }
 
@@ -54,6 +58,8 @@
     Object.keys(formLogin).forEach((key) => {
       formLogin[key] = ''
     })
+
+    loading.value = false
   }
 </script>
 
@@ -138,7 +144,13 @@
             outlined
             @click="isLogin = !isLogin"
           />
-          <Button :label="isLogin ? 'Sign' : 'Sign Up'" severity="info" @click="onSubmit" />
+
+          <Button
+            :label="isLogin ? 'Sign' : 'Sign Up'"
+            :loading="loading"
+            severity="info"
+            @click="onSubmit"
+          />
         </div>
       </template>
     </Card>
