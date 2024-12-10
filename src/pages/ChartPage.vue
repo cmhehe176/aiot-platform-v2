@@ -42,10 +42,9 @@
       @date-picker="handleFetchDashboard(modelProject, modelDatePicker)"
     />
 
-    <div class="flex gap-24 flex-wrap mt-10">
-      <MessageChart v-if="dataChart?.messageDevice" :message-device="dataChart?.messageDevice" />
-
+    <div class="flex gap-24 flex-wrap my-10">
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
+      <MessageChart v-if="dataChart?.messageDevice" :message-device="dataChart?.messageDevice" />
 
       <ObjectType v-if="dataChart?.typeDetect" :object-type="dataChart?.typeDetect" />
 

@@ -23,7 +23,7 @@
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
 
   const chartData = computed(() => ({
-    labels: messageDevice.map((device) => device.name),
+    labels: messageDevice.map((device) => device.name || 'inValidName'),
     datasets: [
       {
         label: 'object',
@@ -39,8 +39,8 @@
       },
       {
         label: 'notification',
-        backgroundColor: documentStyle.getPropertyValue('--p-text-500'),
-        borderColor: documentStyle.getPropertyValue('--p-text-500'),
+        backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
+        borderColor: documentStyle.getPropertyValue('--p-gray-500'),
         data: messageDevice.map((device) => device.notification),
       },
     ],
@@ -83,7 +83,7 @@
 </script>
 
 <template>
-  <div class="message-device min-w-[500px]">
+  <div class="message-device w-4/6">
     <Fieldset legend="Message Of Device" :toggleable="true">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="min-h-[15rem]" />
     </Fieldset>

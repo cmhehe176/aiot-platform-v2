@@ -94,7 +94,7 @@
 </script>
 
 <template>
-  <div class="object-type min-w-[500px]">
+  <div class="object-type w-1/2">
     <Fieldset legend="Type Of Object" :toggleable="true">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[15rem]" />
     </Fieldset>

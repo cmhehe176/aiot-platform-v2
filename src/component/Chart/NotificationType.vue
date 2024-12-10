@@ -82,7 +82,7 @@
 </script>
 
 <template>
-  <div class="notification-type min-w-[500px]">
+  <div class="notification-type w-2/5">
     <Fieldset legend="Notification Type Of Message" :toggleable="true">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[15rem]" />
     </Fieldset>

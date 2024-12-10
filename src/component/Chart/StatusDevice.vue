@@ -43,7 +43,7 @@
 </script>
 
 <template>
-  <div class="min-w-[500px]">
+  <div class="">
     <Fieldset legend="Status Of Device" :toggleable="true">
       <Chart
         type="pie"
