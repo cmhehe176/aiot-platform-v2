@@ -7,7 +7,7 @@
 
 <template>
   <DataView :value="alertList" paginator :rows="5" dataKey="id">
-    <template #list="{ data }"> </template>
+    <!-- <template #list="{ data }"> </template> -->
   </DataView>
 </template>
 
