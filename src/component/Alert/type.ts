@@ -1,4 +1,4 @@
-type ObjectMessage = {
+export type ObjectMessage = {
   id: number
   device_id: number
   message_id: string

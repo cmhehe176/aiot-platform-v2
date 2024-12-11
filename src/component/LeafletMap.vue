@@ -31,7 +31,7 @@
 </script>
 
 <template>
-  <div class="map" :style="`height: ${size}px; width: ${size}px`">
+  <div class="map" :style="`min-height: ${size}px; min-width: ${size}px`">
     <l-map ref="map" :zoom="zoom" :center="[lat, lng]" :options="{ zoomControl: false }">
       <l-tile-layer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -10,7 +10,13 @@
   const { listProject, listDeviceByProject, isAdmin } = storeToRefs(authStore)
 
   const { filter } = defineProps<{
-    filter: { project?: boolean; datePicker?: boolean; device?: boolean; typeObject?: boolean }
+    filter: {
+      project?: boolean
+      datePicker?: boolean
+      device?: boolean
+      typeObject?: boolean
+      tabs?: boolean
+    }
   }>()
 
   const emit = defineEmits(['project', 'device', 'datePicker', 'typeObject'])
@@ -25,6 +31,7 @@
   const modelDevice = defineModel<number>('device')
   const modelDatePicker = defineModel<any>('datePicker')
   const modelTypeObject = defineModel<string>('typeObject')
+  const modelTabs = defineModel<string>('tabs', { default: 'object' })
 
   const handleChangeProject = (projectId) => {
     getListDeviceByProject(projectId)
@@ -38,6 +45,22 @@
 
 <template>
   <div class="filter flex flex-wrap w-full gap-10">
+    <div v-if="filter.tabs" class="mr-10">
+      <Tabs value="tabs" class="filter-tabs">
+        <TabList>
+          <Tab value="object" @click="modelTabs = 'object'">
+            <span>Object</span>
+          </Tab>
+          <Tab value="notification" @click="modelTabs = 'notification'">
+            <span>Notification</span>
+          </Tab>
+          <Tab value="sensor" @click="modelTabs = 'sensor'">
+            <span>Sensor</span>
+          </Tab>
+        </TabList>
+      </Tabs>
+    </div>
+
     <FloatLabel v-if="filter.project" variant="on" class="md:w-52">
       <Select
         v-model="modelProject"
@@ -51,7 +74,7 @@
       <label for="project">Project</label>
     </FloatLabel>
 
-    <FloatLabel v-if="filter.device" variant="on" class="md:w-52">
+    <FloatLabel v-if="filter.device" variant="on" class="md:w-52 w-24">
       <Select
         v-model="modelDevice"
         inputId="device"
@@ -90,11 +113,16 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .filter {
     .item {
       display: flex;
       flex-direction: column;
+    }
+  }
+  .filter-tabs {
+    .p-tab.p-tab-active {
+      color: #606363 !important;
     }
   }
 </style>

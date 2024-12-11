@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_END_POINT,
-  timeout: 3000,
+  timeout: 5000,
 })
 
 api.interceptors.request.use((request) => {
