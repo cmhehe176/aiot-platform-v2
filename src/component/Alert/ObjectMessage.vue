@@ -72,12 +72,6 @@
                   </div>
                 </template>
               </Card>
-
-              <!-- <Image alt="Image">
-                <template #image>
-                  <img :src="preview.image_URL" alt="image" />
-                </template>
-              </Image> -->
             </div>
           </div>
 
