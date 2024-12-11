@@ -50,7 +50,7 @@
               {{ alert.device.isActive ? 'Active' : 'InActive' }}
             </div>
 
-            <div class="flex gap-8 mt-10"><Button>accept</Button><Button>accept</Button></div>
+            <div class="flex gap-8 mt-10"><Button>accept</Button><Button>Reject</Button></div>
           </div>
 
           <div class="flex gap-20">
@@ -90,7 +90,7 @@
       </div>
     </Fieldset>
 
-    <Dialog v-model:visible="isDialog" :style="{ width: '50rem', height: '35rem' }">
+    <Dialog v-model:visible="isDialog" :style="{ width: '50rem', height: 'min-content' }">
       <video ref="videoPlayer" class="video-js" controls preload="auto">
         <source :src="videoUrl" type="video/mp4" />
       </video>

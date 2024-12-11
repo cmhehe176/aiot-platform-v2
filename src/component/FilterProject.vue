@@ -31,7 +31,7 @@
   const modelDevice = defineModel<number>('device')
   const modelDatePicker = defineModel<any>('datePicker')
   const modelTypeObject = defineModel<string>('typeObject')
-  const modelTabs = defineModel<string>('tabs', { default: 'object' })
+  const modelTabs = defineModel<string>('tabs')
 
   const handleChangeProject = (projectId) => {
     getListDeviceByProject(projectId)
@@ -48,13 +48,13 @@
     <div v-if="filter.tabs" class="mr-10">
       <Tabs value="tabs" class="filter-tabs">
         <TabList>
-          <Tab value="object" @click="modelTabs = 'object'">
+          <Tab v-if="isAdmin" value="object" @click="modelTabs = 'object'">
             <span>Object</span>
           </Tab>
           <Tab value="notification" @click="modelTabs = 'notification'">
             <span>Notification</span>
           </Tab>
-          <Tab value="sensor" @click="modelTabs = 'sensor'">
+          <Tab v-if="isAdmin" value="sensor" @click="modelTabs = 'sensor'">
             <span>Sensor</span>
           </Tab>
         </TabList>
