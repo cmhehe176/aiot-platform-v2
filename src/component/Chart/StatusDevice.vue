@@ -46,6 +46,7 @@
   <div class="">
     <Fieldset legend="Status Of Device" :toggleable="true">
       <Chart
+        :canvasProps="{ width: 240, height: 240, id: 'statusDevice' }"
         type="pie"
         :data="chartData"
         :options="chartOptions"

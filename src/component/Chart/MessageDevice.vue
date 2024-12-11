@@ -83,7 +83,7 @@
 </script>
 
 <template>
-  <div class="message-device w-4/6">
+  <div class="message-device">
     <Fieldset legend="Message Of Device" :toggleable="true">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="min-h-[15rem]" />
     </Fieldset>
