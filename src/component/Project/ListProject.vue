@@ -4,36 +4,64 @@
   import { storeToRefs } from 'pinia'
   import { reactive, ref } from 'vue'
   import { userService } from '@/service/user'
+  import { projectService } from '@/service/project'
+  import { authService } from '@/service/auth'
+  import { useAuth } from '@/composables/useAuth'
+  import { deviceService } from '@/service/device'
+
+  const { isAdmin } = storeToRefs(useAuthStore())
+  const { fetchApiProfile } = useAuth()
 
   const { projects } = defineProps<{ projects: any }>()
-  const { isAdmin } = storeToRefs(useAuthStore())
 
   const isDialog = ref(false)
   const users = ref()
+  const devices = ref()
 
-  const initForm = Object.freeze({
+  const initState = {
+    action: '',
     name: '',
-    user: '',
+    users: [],
     description: '',
-    deviceId: NaN,
-  })
+    deviceIds: [],
+  }
 
-  const form = reactive({ ...initForm })
+  const state = reactive({ ...initState })
 
   const handleDialog = () => {
     isDialog.value = !isDialog.value
   }
 
-  const handleEdit = () => {}
   const handleDelete = () => {}
   const handleDetail = () => {}
+  const handleEdit = () => {
+    handleDialog()
+  }
 
   const handleCreate = async () => {
+    state.action = 'create'
     const { items } = await userService.getAllUser()
+    const res = await deviceService.getlistDeviceFree()
 
+    devices.value = res
     users.value = items
 
     handleDialog()
+  }
+
+  const onSubmit = () => {
+    if (state.action === 'create') {
+      delete state.action
+
+      projectService.createProject(state)
+    }
+
+    if (state.action === 'edit') {
+      console.log(state)
+    }
+
+    fetchApiProfile()
+    Object.assign(state, { ...initState })
   }
 </script>
 
@@ -71,53 +99,47 @@
     >
       <div class="flex flex-col gap-[20px]">
         <IftaLabel>
-          <InputText id="name" v-model="form.name" />
+          <InputText id="name" v-model="state.name" />
           <label for="name">Name of Project</label>
         </IftaLabel>
 
         <IftaLabel>
-          <!-- <Select
-            v-model="form.user"
-            inputId="id"
-            :options="users"
-            :multiple="true"
-            optionLabel="name"
-            class="w-full"
-            variant="filled"
-            id
-          /> -->
-
           <MultiSelect
-            v-model="form.user"
-            display="comma"
+            v-model="state.users"
+            display="chip"
             :options="users"
             optionLabel="name"
+            optionValue="id"
             filter
-            inputId="id"
             class="w-full"
             id="user"
           />
           <label for="user">Select User to Project</label>
         </IftaLabel>
 
-        <Button
-          class="w-28"
-          label="Add Device"
-          text
-          outlined
-          severity="info"
-          @click="handleCreate"
-        />
+        <IftaLabel>
+          <MultiSelect
+            v-model="state.deviceIds"
+            display="chip"
+            :options="devices"
+            optionLabel="name"
+            optionValue="id"
+            filter
+            class="w-full"
+            id="user"
+          />
+          <label for="user">Select Devices to Project</label>
+        </IftaLabel>
 
         <IftaLabel>
-          <Textarea id="desctiption" v-model="form.description" rows="5" cols="30" />
+          <Textarea id="desctiption" v-model="state.description" rows="5" cols="30" />
           <label for="desctiption">Description</label>
         </IftaLabel>
 
         <!-- button accept or cancel -->
         <div class="flex justify-end">
-          <Button class="w-28" label="Cancel" text outlined severity="info" @click="handleCreate" />
-          <Button class="w-28" label="Submit" text outlined severity="info" @click="handleCreate" />
+          <Button class="w-28" label="Cancel" text outlined severity="info" @click="handleDialog" />
+          <Button class="w-28" label="Submit" text outlined severity="info" @click="onSubmit" />
         </div>
       </div>
     </Dialog>
@@ -133,6 +155,24 @@
         }
         textarea {
           width: 100%;
+        }
+      }
+
+      .p-multiselect-label {
+        height: auto;
+      }
+
+      .p-multiselect-label-container {
+        min-height: fit-content;
+
+        .p-multiselect-label {
+          margin-top: 20px;
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .p-multiselect-label.p-placeholder.p-multiselect-label-empty {
+          margin-top: 0;
         }
       }
     }

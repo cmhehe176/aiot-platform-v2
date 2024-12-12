@@ -18,6 +18,15 @@ class DeviceService {
     }
   }
 
+  getlistDeviceFree = async () => {
+    try {
+      const res = await this.axiosInstance.get(`/device/free`)
+      if (res.data) return res.data
+
+      return res
+    } catch (error) {}
+  }
+
   updateDevice = async (id, payload?) => {
     try {
       const res = await this.axiosInstance.put(`/device/${id}`, payload)
