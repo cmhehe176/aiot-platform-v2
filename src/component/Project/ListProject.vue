@@ -2,7 +2,7 @@
   import { useAuthStore } from '@/stores/auth'
   import ProjectItem from './ProjectItem.vue'
   import { storeToRefs } from 'pinia'
-  import { reactive, ref } from 'vue'
+  import { onMounted, reactive, ref } from 'vue'
   import { userService } from '@/service/user'
   import { projectService } from '@/service/project'
   import { authService } from '@/service/auth'
@@ -28,25 +28,31 @@
 
   const state = reactive({ ...initState })
 
-  const handleDialog = () => {
-    isDialog.value = !isDialog.value
-  }
-
   const handleDelete = () => {}
   const handleDetail = () => {}
-  const handleEdit = () => {
-    handleDialog()
+
+  const handleEdit = async (data) => {
+    state.action = 'edit'
+    const listDevice = await deviceService.getListDevice()
+    const listUser = await userService.getUserByProject(data.id)
+
+    state.description = data.description
+    state.name = data.name
+    state.deviceIds = data.device.map((d) => d.id)
+    state.users = listUser.data.length ? listUser.data.map((user) => user.id) : []
+
+    devices.value = listDevice
+
+    isDialog.value = true
   }
 
   const handleCreate = async () => {
     state.action = 'create'
-    const { items } = await userService.getAllUser()
     const res = await deviceService.getlistDeviceFree()
 
     devices.value = res
-    users.value = items
 
-    handleDialog()
+    isDialog.value = true
   }
 
   const onSubmit = () => {
@@ -61,8 +67,19 @@
     }
 
     fetchApiProfile()
+    handleCloseDialog()
+  }
+
+  const handleCloseDialog = () => {
+    isDialog.value = false
     Object.assign(state, { ...initState })
   }
+
+  onMounted(async () => {
+    const data = await userService.getAllUser()
+
+    users.value = data
+  })
 </script>
 
 <template>
@@ -81,8 +98,7 @@
       <ProjectItem
         v-for="project in projects"
         :key="project.id"
-        :name="project.name"
-        :description="project.description"
+        :project="project"
         @edit="handleEdit"
         @delete="handleDelete"
         @detail="handleDetail"
@@ -138,7 +154,14 @@
 
         <!-- button accept or cancel -->
         <div class="flex justify-end">
-          <Button class="w-28" label="Cancel" text outlined severity="info" @click="handleDialog" />
+          <Button
+            class="w-28"
+            label="Cancel"
+            text
+            outlined
+            severity="info"
+            @click="handleCloseDialog"
+          />
           <Button class="w-28" label="Submit" text outlined severity="info" @click="onSubmit" />
         </div>
       </div>
