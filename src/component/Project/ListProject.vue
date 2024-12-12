@@ -5,9 +5,9 @@
   import { onMounted, reactive, ref } from 'vue'
   import { userService } from '@/service/user'
   import { projectService } from '@/service/project'
-  import { authService } from '@/service/auth'
   import { useAuth } from '@/composables/useAuth'
   import { deviceService } from '@/service/device'
+  import { ElMessage } from 'element-plus'
 
   const { isAdmin } = storeToRefs(useAuthStore())
   const { fetchApiProfile } = useAuth()
@@ -19,30 +19,39 @@
   const devices = ref()
 
   const initState = {
+    id: NaN,
     action: '',
     name: '',
-    users: [],
+    userIds: [],
     description: '',
     deviceIds: [],
   }
 
   const state = reactive({ ...initState })
 
-  const handleDelete = () => {}
+  const handleDelete = (id: number) => {
+    projectService.deleteProject(id).finally(async () => {
+      await fetchApiProfile()
+
+      ElMessage({ message: 'Delete Project success', type: 'success' })
+    })
+  }
+
   const handleDetail = () => {}
 
   const handleEdit = async (data) => {
     state.action = 'edit'
+
     const listDevice = await deviceService.getListDevice()
     const listUser = await userService.getUserByProject(data.id)
 
+    state.id = data.id
     state.description = data.description
     state.name = data.name
     state.deviceIds = data.device.map((d) => d.id)
-    state.users = listUser.data.length ? listUser.data.map((user) => user.id) : []
+    state.userIds = listUser.data.length ? listUser.data.map((user) => user.id) : []
 
     devices.value = listDevice
-
     isDialog.value = true
   }
 
@@ -55,18 +64,25 @@
     isDialog.value = true
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (state.action === 'create') {
       delete state.action
+      delete state.id
 
-      projectService.createProject(state)
+      await projectService.createProject(state)
+
+      ElMessage({ message: 'Create Project success', type: 'success' })
     }
 
     if (state.action === 'edit') {
-      console.log(state)
+      delete state.action
+
+      const res = await projectService.updateProject(state)
+
+      if (res.message) ElMessage({ message: 'Update Project success', type: 'success' })
     }
 
-    fetchApiProfile()
+    await fetchApiProfile()
     handleCloseDialog()
   }
 
@@ -121,7 +137,7 @@
 
         <IftaLabel>
           <MultiSelect
-            v-model="state.users"
+            v-model="state.userIds"
             display="chip"
             :options="users"
             optionLabel="name"

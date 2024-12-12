@@ -22,7 +22,9 @@
     isDialog.value = true
 
     deviceDetail.value = data
+
     form.name = data.name
+    form.project = data.id
   }
 
   const handleSave = async () => {
