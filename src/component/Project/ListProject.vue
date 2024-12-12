@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-unused-expressions -->
 <script lang="ts" setup>
   import { useAuthStore } from '@/stores/auth'
   import ProjectItem from './ProjectItem.vue'
@@ -31,9 +32,11 @@
 
   const handleDelete = (id: number) => {
     projectService.deleteProject(id).finally(async () => {
-      await fetchApiProfile()
+      const res = await fetchApiProfile()
 
-      ElMessage({ message: 'Delete Project success', type: 'success' })
+      res.statusCode === 500
+        ? ElMessage({ message: 'Delete Project failed', type: 'error' })
+        : ElMessage({ message: 'Delete Project success', type: 'success' })
     })
   }
 
@@ -69,9 +72,11 @@
       delete state.action
       delete state.id
 
-      await projectService.createProject(state)
+      const res = await projectService.createProject(state)
 
-      ElMessage({ message: 'Create Project success', type: 'success' })
+      res.statusCode === 500
+        ? ElMessage({ message: 'Create Project failed', type: 'error' })
+        : ElMessage({ message: 'Create Project success', type: 'success' })
     }
 
     if (state.action === 'edit') {
@@ -79,7 +84,9 @@
 
       const res = await projectService.updateProject(state)
 
-      if (res.message) ElMessage({ message: 'Update Project success', type: 'success' })
+      res.statusCode === 500
+        ? ElMessage({ message: 'Update Project failed', type: 'error' })
+        : ElMessage({ message: 'Update Project success', type: 'success' })
     }
 
     await fetchApiProfile()
