@@ -14,12 +14,7 @@ declare module 'vue' {
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElInput: typeof import('element-plus/es')['ElInput']
-    ElLink: typeof import('element-plus/es')['ElLink']
     Fieldset: typeof import('primevue/fieldset')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     IftaLabel: typeof import('primevue/iftalabel')['default']
@@ -33,10 +28,6 @@ declare module 'vue' {
     Tab: typeof import('primevue/tab')['default']
     TabList: typeof import('primevue/tablist')['default']
     Tabs: typeof import('primevue/tabs')['default']
-    Toast: typeof import('primevue/toast')['default']
     ToggleButton: typeof import('primevue/togglebutton')['default']
-  }
-  export interface ComponentCustomProperties {
-    Ripple: typeof import('primevue/ripple')['default']
   }
 }
