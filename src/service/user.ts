@@ -1,17 +1,16 @@
 import type { AxiosInstance } from 'axios'
 import api from './api'
 
-class ProjectService {
+class UserService {
   private axiosInstance: AxiosInstance
 
   constructor(axios: AxiosInstance) {
     this.axiosInstance = axios
   }
 
-  async createProject(payload: { name: string; userIds?: number[]; description: string }) {
+  async getAllUser() {
     try {
-      const response = await this.axiosInstance.post('/project', payload)
-
+      const response = await this.axiosInstance.get('/user/role/2')
       if (response.data) return response.data
 
       return response
@@ -19,4 +18,4 @@ class ProjectService {
   }
 }
 
-export const projectService = new ProjectService(api)
+export const userService = new UserService(api)
