@@ -55,7 +55,7 @@
 
           <div class="flex gap-20">
             <div v-for="preview in alert.object_list" :key="preview.id">
-              <Card style="width: 10rem; height: 12rem" class="test">
+              <Card style="width: 10rem; height: 12rem" class="object-card">
                 <template #content>
                   <div class="flex flex-col flex-wrap gap-4">
                     <Image :src="preview.image_URL" alt="Image Object" width="250" preview />
@@ -93,7 +93,7 @@
 </template>
 
 <style lang="scss">
-  .test {
+  .object-card {
     justify-content: center;
     .p-card-body {
       padding: 0;

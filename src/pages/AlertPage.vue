@@ -3,9 +3,15 @@
   import FilterProject from '@/component/FilterProject.vue'
   import { objectService } from '@/service/object'
   import { onMounted, ref } from 'vue'
+  import NotificationMessage from '@/component/Alert/NotificationMessage.vue'
+  import SensorMessage from '@/component/Alert/SensorMessage.vue'
+  import { storeToRefs } from 'pinia'
+  import { useAuthStore } from '@/stores/auth'
+
+  const { isAdmin } = storeToRefs(useAuthStore())
 
   const tabValue = ref('notification')
-  const datas = ref()
+  const dataObjects = ref()
   const total = ref()
 
   const handleFetchApi = async () => {
@@ -13,7 +19,7 @@
 
     if (!res) return
 
-    datas.value = res.data
+    dataObjects.value = res.data
     total.value = res.total
   }
 
@@ -26,11 +32,17 @@
     :filter="{ project: true, device: true, datePicker: true, typeObject: true, tabs: true }"
     v-model:tabs="tabValue"
   />
-  <div v-if="tabValue === 'object'" class="overflow-y-auto">
-    <ObjectMessage v-for="data in datas" :key="data.id" :alert="data" />
+  <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
+    <ObjectMessage v-for="data in dataObjects" :key="data.id" :alert="data" />
   </div>
 
-  <div v-else>nothing</div>
+  <div v-if="tabValue === 'sensor' && isAdmin">
+    <SensorMessage v-for="data in dataObjects" :key="data.id" :alert="data" />
+  </div>
+
+  <div v-else>
+    <NotificationMessage v-for="data in dataObjects" :key="data.id" :alert="data" />
+  </div>
 </template>
 
 <style lang="scss" scoped>

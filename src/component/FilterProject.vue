@@ -46,19 +46,10 @@
 <template>
   <div class="filter flex flex-wrap w-full gap-10">
     <div v-if="filter.tabs" class="mr-10">
-      <Tabs value="tabs" class="filter-tabs">
-        <TabList>
-          <Tab v-if="isAdmin" value="object" @click="modelTabs = 'object'">
-            <span>Object</span>
-          </Tab>
-          <Tab value="notification" @click="modelTabs = 'notification'">
-            <span>Notification</span>
-          </Tab>
-          <Tab v-if="isAdmin" value="sensor" @click="modelTabs = 'sensor'">
-            <span>Sensor</span>
-          </Tab>
-        </TabList>
-      </Tabs>
+      <SelectButton
+        v-model="modelTabs"
+        :options="isAdmin ? ['object', 'notification', 'sensor'] : ['notification']"
+      />
     </div>
 
     <FloatLabel v-if="filter.project" variant="on" class="md:w-52">
