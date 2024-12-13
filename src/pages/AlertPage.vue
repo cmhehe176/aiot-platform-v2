@@ -7,8 +7,12 @@
   import SensorMessage from '@/component/Alert/SensorMessage.vue'
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from '@/stores/auth'
+  import { useSocket } from '@/composables/useSocket'
 
+  const { connectSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
+
+  connectSocket()
 
   const tabValue = ref('notification')
   const dataObjects = ref()
@@ -23,7 +27,9 @@
     total.value = res.total
   }
 
-  onMounted(async () => await handleFetchApi())
+  onMounted(async () => {
+    await handleFetchApi()
+  })
 </script>
 
 <template>

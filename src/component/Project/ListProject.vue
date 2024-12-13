@@ -130,11 +130,12 @@
 
     <Dialog
       v-model:visible="isDialog"
+      class="edit-project"
       modal
       position="top"
       header="Header"
       :style="{ width: '50vh' }"
-      class="edit-project"
+      v-on:after-hide="handleCloseDialog"
     >
       <div class="flex flex-col gap-[20px]">
         <IftaLabel>

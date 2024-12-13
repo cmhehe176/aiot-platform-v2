@@ -8,9 +8,9 @@ import vClickOutside from 'click-outside-vue3'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import { resetStore } from '@/stores/resetStore'
-
 import App from './App.vue'
 import router from './router'
+import socketPlugin from '@/plugin/socket'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -30,5 +30,7 @@ app.use(PrimeVue, {
     },
   },
 })
+
+app.use(socketPlugin, `${import.meta.env.VITE_END_POINT}/socket`)
 
 app.mount('#app')
