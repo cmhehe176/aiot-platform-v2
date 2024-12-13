@@ -3,7 +3,7 @@ import { getCurrentInstance } from 'vue'
 
 import type { Event } from '@/type/socket'
 
-type Callback = () => void
+type Callback = (data: any) => void
 
 export const useSocket = () => {
   const internalInstance = getCurrentInstance()
@@ -17,7 +17,7 @@ export const useSocket = () => {
     socket.on(event, callback)
   }
 
-  const offSocket = (event: Event | string, callback: Callback) => {
+  const offSocket = (event: Event | string, callback?: Callback) => {
     socket.off(event, callback)
   }
 

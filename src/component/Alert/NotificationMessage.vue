@@ -9,7 +9,10 @@
 </script>
 
 <template>
-  <Fieldset :legend="date">Notification </Fieldset>
+  <Fieldset :legend="date">
+    <div class="p-1"><span class="font-bold"> Device :</span> {{ alert.device.name }}</div>
+    <div class="p-1"><span class="font-bold"> Payload : </span> {{ alert.payload }}</div>
+  </Fieldset>
 </template>
 
 <style lang="scss" scoped></style>

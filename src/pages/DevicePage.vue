@@ -2,11 +2,13 @@
   import { deviceService } from '@/service/device'
   import { useAuthStore } from '@/stores/auth'
   import { storeToRefs } from 'pinia'
-  import { onMounted, ref } from 'vue'
+  import { onMounted, onUnmounted, ref } from 'vue'
   import DeviceList from '@/component/Device/DeviceList.vue'
   import DeviceDialog from '@/component/Device/DeviceDialog.vue'
+  import { useSocket } from '@/composables/useSocket'
 
   const authStore = useAuthStore()
+  const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin, listDevice } = storeToRefs(authStore)
 
   const devices = ref<any[]>(listDevice.value)
@@ -24,7 +26,21 @@
     devices.value = res
   }
 
-  onMounted(async () => await handleFetchDevice())
+  //===Mounted
+  onMounted(async () => {
+    await handleFetchDevice()
+    connectSocket()
+
+    onSocket('refreshApi', (data) => {
+      if (data) handleFetchDevice()
+    })
+  })
+
+  onUnmounted(() => {
+    disconnectSocket()
+
+    offSocket('refreshApi')
+  })
 </script>
 
 <template>
