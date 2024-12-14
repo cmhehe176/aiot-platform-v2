@@ -9,7 +9,7 @@ export const formatDate = (
   format = 'HH:mm - DD/MM/YYYY',
   timeZone = 'Asia/Saigon',
 ) => {
-  if (!dayjs(date).isValid) return date
+  if (!dayjs(date).isValid || null) return undefined
 
   return dayjs(date).tz(timeZone).format(format)
 }

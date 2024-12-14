@@ -11,6 +11,8 @@
   import { notificationService } from '@/service/notification'
   import { ElNotification } from 'element-plus'
   import { sensorService } from '@/service/sensor'
+  import { isEqual } from 'lodash'
+  import { formatDate } from '@/utils/dayjs'
 
   const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
@@ -32,7 +34,7 @@
   const params = reactive({ ...initParams })
 
   const dataObjects = reactive({
-    data: [],
+    data: ref([]),
     total: NaN,
   })
 
@@ -59,10 +61,12 @@
     params.page = page.page + 1
     params.limit = page.rows
 
-    await handleFetchApi()
+    await handleFetchApi(true)
   }
 
-  const handleFetchApi = async () => {
+  const handleFetchApi = async (next: boolean = false) => {
+    if (isEqual(params, initParams) && !next) return
+
     switch (tabValue.value) {
       case 'notification':
         await fetchApiNotifications()
@@ -86,6 +90,8 @@
       type: 'success',
       duration: 1000,
     })
+
+    return
   }
 
   const fetchApiObjects = async () => {
@@ -163,8 +169,12 @@
   watch(
     () => valueDatePicker.value,
     (newValue) => {
-      if (newValue[0]) params.start = newValue[0]
-      if (newValue[1]) params.end = newValue[1]
+      if (newValue.length < 2) return
+
+      params.start = newValue[0]
+      params.end = newValue[1]
+
+      if (params.end) handleFetchApi()
     },
   )
 </script>
@@ -179,7 +189,6 @@
     v-model:date-picker="valueDatePicker"
     v-model:type-object="params.type"
     @device="handleFetchApi"
-    @date-picker="handleFetchApi"
     @project="handleFetchApi"
     @type-object="handleFetchApi"
     @tabs="handleFetchApi"
@@ -200,7 +209,7 @@
   </div>
 
   <Paginator
-    class="fixed bottom-0 right-1/3 p-4"
+    class="fixed w-full bottom-0 right-1 p-4"
     v-model="params.page"
     :totalRecords="total"
     :page="params.page"
@@ -208,7 +217,6 @@
     :rowsPerPageOptions="[5, 10, 25, 40, 50]"
     @page="handlePageChange"
   >
-    <template #start="{ state }"> Page: {{ state.page + 1 }} - Size: {{ state.rows }} </template>
   </Paginator>
 </template>
 
