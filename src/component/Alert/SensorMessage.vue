@@ -4,6 +4,7 @@
   import type { NotificationMessage } from './type'
   import BaseIcon from '../BaseIcon.vue'
   import { nominatimService } from '@/service/nominatim'
+  import { ElNotification } from 'element-plus'
 
   const { alert } = defineProps<{ alert: NotificationMessage }>()
 
@@ -15,7 +16,16 @@
   const getPreviewNotification = async () => {
     const location = await nominatimService.fetchApiAddress(alert.location.lat, alert.location.lon)
 
-    if (location) displayLocation.value = location.display_name.split(',').slice(0, -2).join(', ')
+    if (!location) return
+
+    displayLocation.value = location.display_name.split(',').slice(0, -2).join(', ')
+
+    ElNotification({
+      title: 'Get Location',
+      message: 'Success',
+      type: 'success',
+      duration: 1000,
+    })
   }
 </script>
 

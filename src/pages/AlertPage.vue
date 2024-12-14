@@ -54,6 +54,8 @@
   })
 
   const handlePageChange = async (page) => {
+    if (params.page === page.page + 1 && params.limit === page.rows) return
+
     params.page = page.page + 1
     params.limit = page.rows
 
@@ -64,21 +66,18 @@
     switch (tabValue.value) {
       case 'notification':
         await fetchApiNotifications()
-
         break
 
       case 'object':
         await fetchApiObjects()
-
         break
 
       case 'sensor':
         await fetchApiSensors()
-
         break
 
       default:
-        break
+        return
     }
 
     ElNotification({
@@ -206,7 +205,7 @@
     :totalRecords="total"
     :page="params.page"
     :rows="params.limit"
-    :rowsPerPageOptions="[5, 10, 15, 20, 25, 30]"
+    :rowsPerPageOptions="[5, 10, 25, 40, 50]"
     @page="handlePageChange"
   >
     <template #start="{ state }"> Page: {{ state.page + 1 }} - Size: {{ state.rows }} </template>
