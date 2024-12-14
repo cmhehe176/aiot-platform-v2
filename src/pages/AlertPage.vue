@@ -2,7 +2,7 @@
   import ObjectMessage from '@/component/Alert/ObjectMessage.vue'
   import FilterProject from '@/component/FilterProject.vue'
   import { objectService } from '@/service/object'
-  import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
+  import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import NotificationMessage from '@/component/Alert/NotificationMessage.vue'
   import SensorMessage from '@/component/Alert/SensorMessage.vue'
   import { storeToRefs } from 'pinia'
@@ -10,6 +10,7 @@
   import { useSocket } from '@/composables/useSocket'
   import { notificationService } from '@/service/notification'
   import { ElNotification } from 'element-plus'
+  import { sensorService } from '@/service/sensor'
 
   const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
@@ -45,6 +46,42 @@
     total: NaN,
   })
 
+  const total = computed(() => {
+    if (tabValue.value === 'sensor') return dataSensors.total
+    if (tabValue.value === 'object') return dataObjects.total
+
+    return dataNotifications.total
+  })
+
+  const handleFetchApi = async () => {
+    switch (tabValue.value) {
+      case 'notification':
+        await fetchApiNotifications()
+
+        break
+
+      case 'object':
+        await fetchApiObjects()
+
+        break
+
+      case 'sensor':
+        await fetchApiSensors()
+
+        break
+
+      default:
+        break
+    }
+
+    ElNotification({
+      title: 'Notification',
+      message: 'Success',
+      type: 'success',
+      duration: 1000,
+    })
+  }
+
   const fetchApiObjects = async () => {
     const { data, total } = await objectService.getMessage(params).catch(console.error)
 
@@ -60,14 +97,18 @@
   }
 
   const fetchApiSensors = async () => {
-    const { data, total } = await notificationService.getMessage(params).catch(console.error)
+    const { data, total } = await sensorService.getMessage(params).catch(console.error)
 
     dataSensors.data = data
     dataSensors.total = total
   }
 
   onMounted(async () => {
-    await Promise.all([fetchApiNotifications(), fetchApiObjects(), fetchApiSensors()])
+    await Promise.all([
+      fetchApiNotifications(),
+      isAdmin.value ? fetchApiObjects() : '',
+      isAdmin.value ? fetchApiSensors() : '',
+    ])
 
     connectSocket()
 
@@ -112,6 +153,14 @@
 
     disconnectSocket()
   })
+
+  watch(
+    () => valueDatePicker.value,
+    (newValue) => {
+      if (newValue[0]) params.start = newValue[0]
+      if (newValue[1]) params.end = newValue[1]
+    },
+  )
 </script>
 
 <template>
@@ -123,19 +172,34 @@
     v-model:project="params.project_id"
     v-model:date-picker="valueDatePicker"
     v-model:type-object="params.type"
+    @device="handleFetchApi"
+    @date-picker="handleFetchApi"
+    @project="handleFetchApi"
+    @type-object="handleFetchApi"
   />
 
-  <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
-    <ObjectMessage v-for="data in dataObjects.data" :key="data.id" :alert="data" />
+  <div class="pb-20">
+    <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
+      <ObjectMessage v-for="data in dataObjects.data" :key="data.id" :alert="data" />
+    </div>
+
+    <div v-if="tabValue === 'sensor' && isAdmin">
+      <SensorMessage v-for="data in dataSensors.data" :key="data.id" :alert="data" />
+    </div>
+
+    <div v-if="tabValue === 'notification'">
+      <NotificationMessage v-for="data in dataNotifications.data" :key="data.id" :alert="data" />
+    </div>
   </div>
 
-  <div v-if="tabValue === 'sensor' && isAdmin">
-    <SensorMessage v-for="data in dataSensors.data" :key="data.id" :alert="data" />
-  </div>
-
-  <div v-if="tabValue === 'notification'">
-    <NotificationMessage v-for="data in dataNotifications.data" :key="data.id" :alert="data" />
-  </div>
+  <Paginator
+    class="fixed bottom-0 right-1/3"
+    :rows="10"
+    :totalRecords="total"
+    :rowsPerPageOptions="[10, 20, 30]"
+  >
+    <template #start="{ state }"> Page: {{ state.page }} Rows: {{ state.rows }} </template>
+  </Paginator>
 </template>
 
 <style lang="scss" scoped>

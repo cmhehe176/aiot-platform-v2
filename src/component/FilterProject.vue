@@ -73,6 +73,7 @@
         optionLabel="name"
         optionValue="id"
         class="w-full"
+        @change="emit('device')"
       />
       <label for="device">Device</label>
     </FloatLabel>
@@ -98,6 +99,7 @@
         optionLabel="name"
         optionValue="value"
         class="w-full"
+        @change="emit('typeObject')"
       />
       <label for="type">Object Type</label>
     </FloatLabel>
