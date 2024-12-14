@@ -21,7 +21,7 @@
   const initParams = {
     device_id: undefined,
     page: 1,
-    limit: 10,
+    limit: 5,
     start: '',
     end: '',
     q: '',
@@ -52,6 +52,13 @@
 
     return dataNotifications.total
   })
+
+  const handlePageChange = async (page) => {
+    params.page = page.page + 1
+    params.limit = page.rows
+
+    await handleFetchApi()
+  }
 
   const handleFetchApi = async () => {
     switch (tabValue.value) {
@@ -176,6 +183,7 @@
     @date-picker="handleFetchApi"
     @project="handleFetchApi"
     @type-object="handleFetchApi"
+    @tabs="handleFetchApi"
   />
 
   <div class="pb-20">
@@ -193,12 +201,15 @@
   </div>
 
   <Paginator
-    class="fixed bottom-0 right-1/3"
-    :rows="10"
+    class="fixed bottom-0 right-1/3 p-4"
+    v-model="params.page"
     :totalRecords="total"
-    :rowsPerPageOptions="[10, 20, 30]"
+    :page="params.page"
+    :rows="params.limit"
+    :rowsPerPageOptions="[5, 10, 15, 20, 25, 30]"
+    @page="handlePageChange"
   >
-    <template #start="{ state }"> Page: {{ state.page }} Rows: {{ state.rows }} </template>
+    <template #start="{ state }"> Page: {{ state.page + 1 }} - Size: {{ state.rows }} </template>
   </Paginator>
 </template>
 

@@ -19,7 +19,7 @@
     }
   }>()
 
-  const emit = defineEmits(['project', 'device', 'datePicker', 'typeObject'])
+  const emit = defineEmits(['project', 'device', 'datePicker', 'typeObject', 'tabs'])
 
   const projectOptions = computed(() =>
     isAdmin.value ? [{ id: -1, name: 'All' }, ...listProject.value] : listProject.value,
@@ -49,6 +49,7 @@
       <SelectButton
         v-model="modelTabs"
         :options="isAdmin ? ['object', 'notification', 'sensor'] : ['notification']"
+        @change="emit('tabs')"
       />
     </div>
 
