@@ -44,7 +44,7 @@
   <div class="app-layout flex flex-col h-screen">
     <!-- Header -->
     <div class="header h-[70px] w-full p-2 flex justify-between bg-slate-400 fixed">
-      <el-button @click="handleLogout"> logout</el-button>
+      <Button severity="secondary" @click="handleLogout"> logout</Button>
     </div>
 
     <!-- Content -->
@@ -66,7 +66,7 @@
         @click="isCollapse = true"
       />
 
-      <div class="main p-4 flex-1 overflow-y-auto h-full">
+      <div class="main p-4 flex-1 overflow-y-auto h-full pb-20">
         <slot></slot>
       </div>
     </div>
