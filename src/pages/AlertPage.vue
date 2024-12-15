@@ -2,7 +2,7 @@
   import ObjectMessage from '@/component/Alert/ObjectMessage.vue'
   import FilterProject from '@/component/FilterProject.vue'
   import { objectService } from '@/service/object'
-  import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+  import { computed, onMounted, onUnmounted, reactive, ref, toRef, watch } from 'vue'
   import NotificationMessage from '@/component/Alert/NotificationMessage.vue'
   import SensorMessage from '@/component/Alert/SensorMessage.vue'
   import { storeToRefs } from 'pinia'
@@ -12,7 +12,6 @@
   import { ElNotification } from 'element-plus'
   import { sensorService } from '@/service/sensor'
   import { isEqual } from 'lodash'
-  import { formatDate } from '@/utils/dayjs'
 
   const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
@@ -121,7 +120,7 @@
     }
 
     ElNotification({
-      title: 'Notification',
+      title: 'Refresh Data',
       message: 'Success',
       type: 'success',
       duration: 1000,
@@ -160,8 +159,10 @@
 
     connectSocket()
 
-    onSocket('notificationMessage', (data) => {
-      dataNotifications.data = [data, ...dataNotifications.data]
+    onSocket('notificationMessage', (payload) => {
+      const data = toRef(payload)
+
+      dataNotifications.data = [data.value, ...dataNotifications.data]
 
       ElNotification({
         title: 'Notification',
@@ -171,23 +172,29 @@
       })
     })
 
-    onSocket('sensorMessage', (data) => {
-      dataSensors.data = [data, ...dataSensors.data]
+    if (isAdmin.value) return
+
+    onSocket('sensorMessage', (payload) => {
+      const data = toRef(payload)
+
+      dataSensors.data = [data.value, ...dataSensors.data]
 
       ElNotification({
-        title: 'Object',
-        message: 'You have Message for Object Detect',
+        title: 'Sensor',
+        message: 'You have Message for Object Sensor',
         type: 'success',
         duration: 1000,
       })
     })
 
-    onSocket('objectMessage', (data) => {
-      dataObjects.data = [data, ...dataObjects.data]
+    onSocket('objectMessage', (payload) => {
+      const data = toRef(payload)
+
+      dataObjects.data = [data.value, ...dataObjects.data]
 
       ElNotification({
-        title: 'Sensor',
-        message: 'You have Message for Sensor',
+        title: 'Object',
+        message: 'You have Message for Object',
         type: 'success',
         duration: 1000,
       })

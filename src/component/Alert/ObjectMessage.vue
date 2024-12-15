@@ -10,8 +10,9 @@
   const isDialog = ref(false)
   const videoUrl = ref<any>(null)
 
-  const date = computed<any>(() => formatDate(alert.timestamp) || 'inValid Time')
-
+  const date = computed<any>(
+    () => formatDate(alert.timestamp, 'HH:mm:ss.SSS - DD/MM/YYYY') || 'inValid Time',
+  )
   const handleViewVideo = (video: string) => {
     videoUrl.value = video
 

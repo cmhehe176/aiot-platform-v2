@@ -8,7 +8,9 @@
 
   const { alert } = defineProps<{ alert: NotificationMessage }>()
 
-  const date = computed<any>(() => formatDate(alert.timestamp) || 'inValid Time')
+  const date = computed<any>(
+    () => formatDate(alert.timestamp, 'HH:mm:ss.SSS - DD/MM/YYYY') || 'inValid Time',
+  )
   const displayLocation = ref()
 
   const emit = defineEmits(['detail', 'reject', 'accept'])
