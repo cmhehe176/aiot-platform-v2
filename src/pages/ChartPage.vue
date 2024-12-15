@@ -44,6 +44,7 @@
 
     <div class="flex gap-24 flex-wrap my-10">
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
+
       <MessageChart
         class="w-4/6"
         v-if="dataChart?.messageDevice"

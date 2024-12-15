@@ -5,6 +5,7 @@
   import LeafletMap from '../LeafletMap.vue'
   import videojs from 'video.js'
 
+  const emit = defineEmits(['reject', 'accept'])
   const { alert } = defineProps<{ alert: ObjectMessage }>()
   const isDialog = ref(false)
   const videoUrl = ref<any>(null)
@@ -50,7 +51,25 @@
               {{ alert.device.isActive ? 'Active' : 'InActive' }}
             </div>
 
-            <div class="flex gap-8 mt-10"><Button>accept</Button><Button>Reject</Button></div>
+            <div class="flex gap-8 mt-10">
+              <Button
+                variant="outlined"
+                class="text-xl font-bold"
+                severity="danger"
+                @click="emit('reject', { id: alert.id, status: 2 })"
+              >
+                Reject
+              </Button>
+
+              <Button
+                variant="outlined"
+                class="text-xl font-bold"
+                severity="info"
+                @click="emit('accept', { id: alert.id, status: 1 })"
+              >
+                Accept
+              </Button>
+            </div>
           </div>
 
           <div class="flex gap-20">

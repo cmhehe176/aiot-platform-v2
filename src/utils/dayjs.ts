@@ -6,7 +6,7 @@ dayjs.extend(timezone)
 
 export const formatDate = (
   date: Date | string,
-  format = 'HH:mm - DD/MM/YYYY',
+  format = 'HH:mm:ss.SSS - DD/MM/YYYY',
   timeZone = 'Asia/Saigon',
 ) => {
   if (!dayjs(date).isValid || null) return undefined

@@ -64,6 +64,42 @@
     await handleFetchApi(true)
   }
 
+  const handleMessage = async (data) => {
+    const { id, status } = data
+
+    switch (tabValue.value) {
+      case 'notification':
+        await notificationService.replied(id, status)
+        await fetchApiNotifications()
+
+        break
+
+      case 'object':
+        await objectService.replied(id, status)
+        await fetchApiObjects()
+
+        break
+
+      case 'sensor':
+        await sensorService.replied(id, status)
+        await fetchApiSensors()
+
+        break
+
+      default:
+        return
+    }
+
+    ElNotification({
+      title: status === 1 ? 'Accept' : 'Reject',
+      message: 'Success',
+      type: 'success',
+      duration: 1000,
+    })
+
+    return
+  }
+
   const handleFetchApi = async (next: boolean = false) => {
     if (isEqual(params, initParams) && !next) return
 
@@ -182,7 +218,13 @@
 <template>
   <FilterProject
     class="filter-alert"
-    :filter="{ project: true, device: true, datePicker: true, typeObject: true, tabs: true }"
+    :filter="{
+      project: true,
+      device: true,
+      datePicker: true,
+      typeObject: tabValue === 'object' ? true : false,
+      tabs: true,
+    }"
     v-model:tabs="tabValue"
     v-model:device="params.device_id"
     v-model:project="params.project_id"
@@ -196,15 +238,33 @@
 
   <div class="pb-20">
     <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
-      <ObjectMessage v-for="data in dataObjects.data" :key="data.id" :alert="data" />
+      <ObjectMessage
+        v-for="data in dataObjects.data"
+        :key="data.id"
+        :alert="data"
+        @accept="handleMessage"
+        @reject="handleMessage"
+      />
     </div>
 
     <div v-if="tabValue === 'sensor' && isAdmin">
-      <SensorMessage v-for="data in dataSensors.data" :key="data.id" :alert="data" />
+      <SensorMessage
+        v-for="data in dataSensors.data"
+        :key="data.id"
+        :alert="data"
+        @accept="handleMessage"
+        @reject="handleMessage"
+      />
     </div>
 
     <div v-if="tabValue === 'notification'">
-      <NotificationMessage v-for="data in dataNotifications.data" :key="data.id" :alert="data" />
+      <NotificationMessage
+        v-for="data in dataNotifications.data"
+        :key="data.id"
+        :alert="data"
+        @accept="handleMessage"
+        @reject="handleMessage"
+      />
     </div>
   </div>
 

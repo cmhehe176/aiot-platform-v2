@@ -41,14 +41,19 @@
         </div>
       </div>
 
-      <div class="items-center" v-if="displayLocation">
+      <div class="items-center flex justify-center" v-if="displayLocation">
         <BaseIcon name="marker" size="20" /> {{ displayLocation }}
       </div>
 
-      <div class="flex gap-2 flex-wrap items-center">
+      <div class="flex gap-2 flex-wrap items-center h-full w-1/2 justify-end">
         <BaseIcon name="marker" size="40" @click="getPreviewNotification" />
 
-        <Button variant="text" class="text-xl font-bold" severity="text" @click="emit('detail')">
+        <Button
+          variant="text"
+          class="text-xl font-bold"
+          severity="text"
+          @click="emit('detail', alert)"
+        >
           Detail
         </Button>
 
@@ -56,7 +61,7 @@
           variant="outlined"
           class="text-xl font-bold"
           severity="danger"
-          @click="emit('reject')"
+          @click="emit('reject', { id: alert.id, status: 2 })"
         >
           Reject
         </Button>
@@ -65,7 +70,7 @@
           variant="outlined"
           class="text-xl font-bold"
           severity="info"
-          @click="emit('accept')"
+          @click="emit('accept', { id: alert.id, status: 1 })"
         >
           Accept
         </Button>

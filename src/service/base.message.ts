@@ -35,4 +35,15 @@ export class MessageService {
       console.log(error)
     }
   }
+
+  async replied(id: number, replied: number) {
+    try {
+      const res = await this.axiosInstance.put(`/${this.name}/reply/${id}`, { replied })
+      if (res) return res.data
+
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
