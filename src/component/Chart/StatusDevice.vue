@@ -30,11 +30,11 @@
       {
         data: [statusDevice.deviceActive, statusDevice.deviceInActive],
         backgroundColor: [
-          documentStyleBody.getPropertyValue('--p-orange-500'),
+          documentStyle.getPropertyValue('--p-cyan-500'),
           documentStyleBody.getPropertyValue('--p-gray-500'),
         ],
         hoverBackgroundColor: [
-          documentStyleBody.getPropertyValue('--p-orange-400'),
+          documentStyle.getPropertyValue('--p-cyan-500'),
           documentStyleBody.getPropertyValue('--p-gray-400'),
         ],
       },

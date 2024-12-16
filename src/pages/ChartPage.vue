@@ -9,6 +9,7 @@
   import ObjectType from '@/component/Chart/ObjectType.vue'
   import NotificationType from '@/component/Chart/NotificationType.vue'
   import type { DashboardResponse } from '@/service/type'
+  import StatusNotification from '@/component/Chart/StatusNotification.vue'
 
   const { isAdmin } = storeToRefs(useAuthStore())
 
@@ -43,6 +44,24 @@
     />
 
     <div class="flex gap-24 flex-wrap my-10">
+      <StatusNotification
+        v-if="dataChart?.notificationStatus && isAdmin"
+        :status-notification="dataChart.notificationStatus.objects"
+        type="Objects"
+      />
+
+      <StatusNotification
+        v-if="dataChart?.notificationStatus"
+        :status-notification="dataChart.notificationStatus.notifications"
+        type="Notification"
+      />
+
+      <StatusNotification
+        v-if="dataChart?.notificationStatus && isAdmin"
+        :status-notification="dataChart.notificationStatus.sensors"
+        type="Sensor"
+      />
+
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
 
       <MessageChart

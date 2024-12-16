@@ -38,4 +38,19 @@ export interface DashboardResponse {
     object: number
     sensor: number
   }[]
+  notificationStatus: {
+    objects: {
+      status: string
+      count: number
+    }[]
+
+    notifications: {
+      status: string
+      count: number
+    }[]
+    sensors: {
+      status: string
+      count: number
+    }[]
+  }
 }
