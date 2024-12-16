@@ -16,6 +16,7 @@
   const dataChart = ref<DashboardResponse>()
   const modelProject = ref()
   const modelDatePicker = ref()
+  const modelTypeChart = ref(1)
 
   const handleFetchDashboard = async (projectId?: number, datePicker?: any[]) => {
     const res = await dashboardService.getDashboard({
@@ -38,12 +39,18 @@
       class="p-1 w-full"
       v-model:project="modelProject"
       v-model:date-picker="modelDatePicker"
-      :filter="{ project: true, datePicker: true }"
+      v-model:type-chart="modelTypeChart"
+      :filter="{
+        project: true,
+        datePicker: true,
+        typeChart: true,
+        device: modelTypeChart === 2 ? true : false,
+      }"
       @project="handleFetchDashboard(modelProject, modelDatePicker)"
       @date-picker="handleFetchDashboard(modelProject, modelDatePicker)"
     />
 
-    <div class="flex gap-24 flex-wrap my-10">
+    <div v-if="modelTypeChart === 1" class="flex gap-24 flex-wrap my-10">
       <StatusNotification
         v-if="dataChart?.notificationStatus && isAdmin"
         :status-notification="dataChart.notificationStatus.objects"

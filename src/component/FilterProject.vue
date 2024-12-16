@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useAuthStore } from '@/stores/auth'
   import { storeToRefs } from 'pinia'
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, onMounted, reactive, ref } from 'vue'
   import { optionsTypes } from '@/constant/optionsType'
 
   const authStore = useAuthStore()
@@ -16,31 +16,48 @@
       device?: boolean
       typeObject?: boolean
       tabs?: boolean
+      typeChart?: boolean
     }
   }>()
 
   const emit = defineEmits(['project', 'device', 'datePicker', 'typeObject', 'tabs'])
 
   const projectOptions = computed(() =>
-    isAdmin.value ? [{ id: -1, name: 'All' }, ...listProject.value] : listProject.value,
+    isAdmin.value && modelTypeChart.value === 1
+      ? [{ id: -1, name: 'All' }, ...listProject.value]
+      : listProject.value,
   )
 
-  const deviceOptions = computed(() => [{ id: -1, name: 'All' }, ...listDeviceByProject.value])
+  const deviceOptions = computed(() =>
+    modelTypeChart.value === 1
+      ? [{ id: -1, name: 'All' }, ...listDeviceByProject.value]
+      : listDeviceByProject.value,
+  )
 
   const modelProject = defineModel<number>('project')
   const modelDevice = defineModel<number>('device')
   const modelDatePicker = defineModel<any>('datePicker')
   const modelTypeObject = defineModel<string>('typeObject')
   const modelTabs = defineModel<string>('tabs')
+  const modelTypeChart = defineModel<number>('typeChart', { default: 1 })
+
+  const typeChartOptions = reactive([
+    {
+      id: 1,
+      name: 'Overview',
+    },
+    {
+      id: 2,
+      name: 'Detail',
+    },
+  ])
 
   const handleChangeProject = (projectId) => {
     getListDeviceByProject(projectId)
     emit('project')
   }
 
-  onMounted(() => {
-    modelProject.value = projectOptions.value[0].id
-  })
+  onMounted(() => {})
 </script>
 
 <template>
@@ -52,6 +69,18 @@
         @change="emit('tabs')"
       />
     </div>
+
+    <FloatLabel v-if="filter.typeChart" variant="on" class="md:w-52">
+      <Select
+        v-model="modelTypeChart"
+        inputId="typeChart"
+        :options="typeChartOptions"
+        optionLabel="name"
+        optionValue="id"
+        class="w-full"
+      />
+      <label for="typeChart">Select Type Chart</label>
+    </FloatLabel>
 
     <FloatLabel v-if="filter.project" variant="on" class="md:w-52">
       <Select

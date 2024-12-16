@@ -54,6 +54,7 @@
             />
             <Button
               label="Delete"
+              hidden
               outlined
               severity="danger"
               @click="emitter.emit('deleteDevice', data)"
