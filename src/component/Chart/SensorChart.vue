@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue'
+  import { formatDate } from '@/utils/dayjs'
 
   const documentStyle = getComputedStyle(document.documentElement)
   const textColor = documentStyle.getPropertyValue('--p-text-color')
@@ -7,7 +8,7 @@
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
   const documentStyleData = getComputedStyle(document.documentElement)
 
-  const { sensorData = [] } = defineProps<{ sensorData: any }>()
+  const { sensorData } = defineProps<{ sensorData: any }>()
 
   const chartOptions = ref({
     maintainAspectRatio: false,
@@ -40,13 +41,13 @@
   })
 
   const chartData = computed(() => ({
-    labels: sensorData.payload.map((sensor) => sensor.timestamp),
+    labels: sensorData.payload.map((sensor) => formatDate(sensor.timestamp)),
     datasets: [
       {
         label: sensorData.unit || 'unit',
         data: sensorData.payload.map((sensor) => sensor.data),
-        fill: false,
-        borderColor: documentStyleData.getPropertyValue('--p-gray-500'),
+        fill: true,
+        borderColor: documentStyleData.getPropertyValue('--p-cyan-500'),
         tension: 0.4,
       },
     ],
@@ -54,7 +55,9 @@
 </script>
 
 <template>
-  <div class="card">
-    <Chart type="line" :data="chartData" :options="chartOptions" class="h-[30rem]" />
+  <div class="notification-type w-full">
+    <Fieldset :legend="sensorData.name" :toggleable="true">
+      <Chart type="line" :data="chartData" :options="chartOptions" class="h-[30rem]" />
+    </Fieldset>
   </div>
 </template>
