@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue'
   import { formatDate } from '@/utils/dayjs'
+  import BaseIcon from '../BaseIcon.vue'
 
   const documentStyle = getComputedStyle(document.documentElement)
   const textColor = documentStyle.getPropertyValue('--p-text-color')
@@ -55,8 +56,18 @@
 </script>
 
 <template>
-  <div class="notification-type w-full">
-    <Fieldset :legend="sensorData.name" :toggleable="true">
+  <div class="sensor w-full">
+    <Fieldset toggleable>
+      <template #legend>
+        <Button text severity="secondary" @click="() => console.log('hello')">
+          <BaseIcon name="setting" :size="20" />
+
+          <span class="font-bold">
+            {{ sensorData.name }}
+          </span>
+        </Button>
+      </template>
+
       <Chart type="line" :data="chartData" :options="chartOptions" class="h-[30rem]" />
     </Fieldset>
   </div>

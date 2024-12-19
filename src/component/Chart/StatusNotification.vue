@@ -47,7 +47,7 @@
 
 <template>
   <div class="card flex justify-center">
-    <Fieldset :legend="type" :toggleable="true">
+    <Fieldset :legend="type">
       <Chart
         type="doughnut"
         :data="chartData"

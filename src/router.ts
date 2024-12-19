@@ -10,6 +10,7 @@ import DefaultLayout from './layout/DefaultLayout.vue'
 import { useAuthStore } from './stores/auth'
 import { authService } from './service/auth'
 import DevicePage from './pages/DevicePage.vue'
+import { useLoadingStore } from './stores/loading'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,4 +87,5 @@ router.beforeEach(async (to, _from, next) => {
   next()
 })
 
+router.afterEach(() => useLoadingStore().clearLoading())
 export default router
