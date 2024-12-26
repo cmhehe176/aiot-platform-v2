@@ -71,11 +71,11 @@
     />
 
     <div v-if="modelDetailSensor === 1" class="flex gap-24 flex-wrap my-10">
-      <StatusNotification
+      <!-- <StatusNotification
         v-if="dataChart?.notificationStatus && isAdmin"
         :status-notification="dataChart.notificationStatus.objects"
         type="Objects"
-      />
+      /> -->
 
       <StatusNotification
         v-if="dataChart?.notificationStatus"
@@ -83,11 +83,11 @@
         type="Notification"
       />
 
-      <StatusNotification
+      <!-- <StatusNotification
         v-if="dataChart?.notificationStatus && isAdmin"
         :status-notification="dataChart.notificationStatus.sensors"
         type="Sensor"
-      />
+      /> -->
 
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
 
