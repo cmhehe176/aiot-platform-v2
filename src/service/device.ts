@@ -36,6 +36,26 @@ class DeviceService {
       console.error(error)
     }
   }
+
+  getListSubDevice = async (type = 'all') => {
+    try {
+      const res = await this.axiosInstance.get(`/device/sub-device/${type}`)
+
+      if (res.data) return res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  updateSubDevice = async (id, payload?) => {
+    try {
+      const res = await this.axiosInstance.put(`/device/sub-device/${id}`, payload)
+
+      if (res.data) return res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const deviceService = new DeviceService(api)

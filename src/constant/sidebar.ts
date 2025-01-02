@@ -28,6 +28,25 @@ export const sidebars: ISidebar[] = [
     ],
   },
   {
+    label: 'Device',
+    key: 'device',
+    icon: 'device',
+    items: [
+      {
+        label: 'Device',
+        name: 'device',
+        key: 'device',
+        icon: 'device',
+      },
+      {
+        label: 'Sub Device',
+        name: 'sub-device',
+        key: 'sub-device',
+        icon: 'project',
+      },
+    ],
+  },
+  {
     label: 'My Project',
     name: 'myproject',
     key: 'myproject',
@@ -39,12 +58,6 @@ export const sidebars: ISidebar[] = [
     key: 'support',
     icon: 'letter',
     admin: true,
-  },
-  {
-    label: 'Device',
-    name: 'device',
-    key: 'device',
-    icon: 'device',
   },
 ]
 

@@ -9,6 +9,7 @@
 
   const expandedKeys = ref({
     dashboard: true,
+    device: true,
   })
 
   // const sidebarItems = computed(() => (isAdmin.value ? sidebars : sidebarsForUser))

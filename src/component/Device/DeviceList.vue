@@ -47,18 +47,17 @@
         <template #body="{ data }">
           <div class="flex gap-1">
             <Button
-              label="Edit"
+              label="Setting"
               outlined
               severity="secondary"
               @click="emitter.emit('editDevice', data)"
             />
-            <Button
+            <!-- <Button
               label="Delete"
-              hidden
               outlined
               severity="danger"
               @click="emitter.emit('deleteDevice', data)"
-            />
+            /> -->
           </div>
         </template>
       </Column>

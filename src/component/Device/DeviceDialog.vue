@@ -55,7 +55,7 @@
 <template>
   <div class="device-dialog flex justify-center">
     <!-- dialog device -->
-    <Dialog v-model:visible="isDialog" modal header="Update Device" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="isDialog" modal header="Setting Device" :style="{ width: '25rem' }">
       <span class="text-surface-500 dark:text-surface-400 block mb-8"> Update your of Device.</span>
 
       <IftaLabel style="width: 100%" class="label-input w-full">

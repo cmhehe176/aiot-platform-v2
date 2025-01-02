@@ -11,6 +11,7 @@ import { useAuthStore } from './stores/auth'
 import { authService } from './service/auth'
 import DevicePage from './pages/DevicePage.vue'
 import { useLoadingStore } from './stores/loading'
+import SubDevicePage from './pages/SubDevicePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,22 @@ const router = createRouter({
         },
       ],
     },
+
+    {
+      path: '/xxx',
+      children: [
+        {
+          path: '/device',
+          name: 'device',
+          component: DevicePage,
+        },
+        {
+          path: '/sub-device',
+          name: 'sub-device',
+          component: SubDevicePage,
+        },
+      ],
+    },
     {
       path: '/my-project',
       name: 'myproject',
@@ -55,11 +72,6 @@ const router = createRouter({
       path: '/support-management',
       name: 'support',
       component: SupportManagement,
-    },
-    {
-      path: '/device',
-      name: 'device',
-      component: DevicePage,
     },
   ],
 })
