@@ -4,6 +4,7 @@
   import { useRouter } from 'vue-router'
   import AppSidebar from '@/component/Sidebar/AppSidebar.vue'
   import { useAuthStore } from '@/stores/auth'
+  import HeaderPage from '@/component/Header/HeaderPage.vue'
 
   const router = useRouter()
   const authStore = useAuthStore()
@@ -43,9 +44,7 @@
 <template>
   <div class="app-layout flex flex-col h-screen">
     <!-- Header -->
-    <div class="header h-[70px] w-full p-2 flex justify-between bg-slate-400 fixed">
-      <Button severity="secondary" @click="handleLogout"> logout</Button>
-    </div>
+    <HeaderPage @logout="handleLogout" />
 
     <!-- Content -->
     <div class="content flex mt-[70px] fixed w-full h-full">
