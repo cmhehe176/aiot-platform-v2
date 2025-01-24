@@ -9,6 +9,7 @@
   import { useAuth } from '@/composables/useAuth'
   import { deviceService } from '@/service/device'
   import { ElMessage } from 'element-plus'
+  import { formatDate } from '@/utils/dayjs'
 
   const { isAdmin } = storeToRefs(useAuthStore())
   const { fetchApiProfile } = useAuth()
@@ -16,6 +17,7 @@
   const { projects } = defineProps<{ projects: any }>()
 
   const isDialog = ref(false)
+  const isDialogDetail = ref(false)
   const users = ref()
   const devices = ref()
 
@@ -30,6 +32,8 @@
 
   const state = reactive({ ...initState })
 
+  const projectDetail = ref()
+
   const handleDelete = (id: number) => {
     projectService.deleteProject(id).finally(async () => {
       const res = await fetchApiProfile()
@@ -40,7 +44,14 @@
     })
   }
 
-  const handleDetail = () => {}
+  const handleDetail = async (data) => {
+    isDialogDetail.value = true
+
+    projectDetail.value = data
+    const listUserInProject = await projectService.userInProject(data.id)
+
+    projectDetail.value.users = listUserInProject
+  }
 
   const handleEdit = async (data) => {
     state.action = 'edit'
@@ -128,12 +139,13 @@
       />
     </div>
 
+    <!-- update -->
     <Dialog
       v-model:visible="isDialog"
       class="edit-project"
       modal
       position="top"
-      header="Header"
+      header="Update Project"
       :style="{ width: '50vh' }"
       v-on:after-hide="handleCloseDialog"
     >
@@ -187,6 +199,72 @@
             @click="handleCloseDialog"
           />
           <Button class="w-28" label="Submit" text outlined severity="info" @click="onSubmit" />
+        </div>
+      </div>
+    </Dialog>
+
+    <!-- detail -->
+    <Dialog
+      v-model:visible="isDialogDetail"
+      class="detail-project"
+      modal
+      position="top"
+      header="Project Detail"
+      :style="{ width: '50vh' }"
+    >
+      <div class="flex flex-col gap-4">
+        <!-- Project Name -->
+        <div class="flex justify-between">
+          <span class="font-bold">Project Name:</span>
+          <span>{{ projectDetail.name }}</span>
+        </div>
+
+        <!-- Created By -->
+        <div class="flex justify-between">
+          <span class="font-bold">Created By:</span>
+          <span>{{ projectDetail.createdBy.name }}</span>
+        </div>
+
+        <!-- Created At -->
+        <div class="flex justify-between">
+          <span class="font-bold">Created At:</span>
+          <span>{{ formatDate(projectDetail.createdAt) }}</span>
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col">
+          <span class="font-bold">Description:</span>
+          <p v-if="projectDetail.description" class="text-justify">
+            {{ projectDetail.description }}
+          </p>
+          <p v-else class="italic text-gray-500">No description available.</p>
+        </div>
+
+        <!-- Users -->
+        <div>
+          <span class="font-bold">Users:</span>
+          <ul class="ml-5 flex flex-col gap-1">
+            <li v-for="user in projectDetail.users" :key="user.id" class="text-sm">
+              <div>
+                <strong>{{ user.name }}</strong> - {{ user.email }}
+                <span v-if="user.roleId === 0" class="text-red-500">[Super Admin]</span>
+                <span v-else-if="user.roleId === 1" class="text-blue-500">[Admin]</span>
+                <span v-else class="text-green-500">[User]</span>
+              </div>
+              <div>Phone: {{ user.telephone }}</div>
+            </li>
+          </ul>
+        </div>
+        <!-- Devices -->
+        <div>
+          <span class="font-bold">Devices:</span>
+          <ul v-if="projectDetail.device.length" class="flex flex-col gap-1">
+            <li v-for="(device, index) in projectDetail.device" :key="device.id" class="text-sm">
+              {{ index }}: {{ device.name }} (MAC: {{ device.mac_address }})
+            </li>
+          </ul>
+
+          <p v-else class="italic text-gray-500">No devices available.</p>
         </div>
       </div>
     </Dialog>

@@ -55,6 +55,18 @@ class ProjectService {
       console.log(error)
     }
   }
+
+  async userInProject(id: number) {
+    try {
+      const response = await this.axiosInstance.get(`/project/${id}`)
+
+      if (response.data) return response.data.data
+
+      return response
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 export const projectService = new ProjectService(api)

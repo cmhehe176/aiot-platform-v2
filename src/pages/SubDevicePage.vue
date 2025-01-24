@@ -1,11 +1,12 @@
 <script lang="ts" setup>
   import { deviceService } from '@/service/device'
-  import { onMounted, reactive, ref } from 'vue'
+  import { onMounted, reactive, ref, watch } from 'vue'
   import { formatDate } from '@/utils/dayjs'
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from '@/stores/auth'
   import { userService } from '@/service/user'
   import { ElNotification } from 'element-plus'
+  import SelectArea from '@/component/SelectArea.vue'
 
   const authStore = useAuthStore()
   const { isAdmin } = storeToRefs(authStore)
@@ -16,9 +17,12 @@
   const listUser = ref()
 
   const initForm = {
-    state: '',
+    type: 'sensor',
     permissions: [],
-    setting: '',
+    lower_limit: '',
+    upper_limit: '',
+    selected_area: [],
+    detection_timer: '',
   }
 
   const form = reactive({ ...initForm })
@@ -29,7 +33,7 @@
 
     isDialog.value = !isDialog.value
     subDeviceData.value = data
-    form.state = data.type
+    form.type = data.type
 
     if (data.permissions && Array.isArray(data.permissions)) {
       form.permissions = data.permissions
@@ -38,9 +42,16 @@
 
   const handleSave = async () => {
     if (!subDeviceData.value && !subDeviceData.value.id) return
-    //update in future
-    delete form.state
-    delete form.setting
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (!value || (Array.isArray(value) && !value.length)) delete form[key]
+    })
+
+    if (!Object.keys(form).length) {
+      isDialog.value = false
+
+      return
+    }
 
     const affected = await deviceService.updateSubDevice(subDeviceData.value.id, form)
 
@@ -58,6 +69,16 @@
     listSubDevice.value = await deviceService.getListSubDevice()
     listUser.value = await userService.getAllUser()
   })
+
+  // const title = computed({
+  //   get() {
+  //     return form.title
+  //   },
+
+  //   set(newValue) {
+  //     form.title = newValue.trimStart().replace(/  +/g, ' ')
+  //   },
+  // })
 </script>
 
 <template>
@@ -67,23 +88,17 @@
         <span class="text-xl font-bold ml-8">Sub Devices</span>
       </template>
 
-      <!-- <Column header="Status" class="status flex justify-center">
-        <template #body="{ data }">
-          <ToggleButton
-            v-model="data.isActive"
-            onLabel="Active"
-            offLabel="InActive"
-            class="w-36"
-            disabled
-          />
-        </template>
-      </Column> -->
-
       <Column field="id" header="Id"></Column>
 
       <Column field="name" header="Name"></Column>
 
       <Column field="type" header="Type"></Column>
+
+      <Column field="unit" header="Unit"></Column>
+
+      <Column field="device" header="Device">
+        <template #body="{ data }"> {{ data.device?.name }}</template>
+      </Column>
 
       <Column header="CreatedAt">
         <template #body="{ data }"> {{ formatDate(data.createdAt) }}</template>
@@ -113,34 +128,63 @@
       v-model:visible="isDialog"
       modal
       header="Setting Device"
-      :style="{ width: '35rem' }"
+      :style="{ width: '40rem' }"
       position="top"
     >
-      <div v-if="subDeviceData" class="flex flex-col gap-7">
-        <FloatLabel variant="in" v-if="subDeviceData.type === 'sensor'">
-          <MultiSelect
-            v-model="form.permissions"
-            :options="listUser"
-            id="select_user"
-            optionLabel="name"
-            option-value="id"
-            filter
-            checkmark
-            class="w-full"
-          />
-          <label for="select_user">Select a User for access to Sub Device</label>
-        </FloatLabel>
+      <div v-if="subDeviceData">
+        <div class="flex flex-col gap-2" v-if="subDeviceData.type === 'camera'">
+          <FloatLabel variant="in">
+            <InputText
+              id="detection_timer"
+              type="text"
+              v-model="form.detection_timer"
+              class="w-full"
+            />
 
-        <FloatLabel variant="in">
-          <InputText id="input_setting" type="text" v-model="form.setting" class="w-full" />
+            <label for="detection_timer">Setting detection timer</label>
+          </FloatLabel>
 
-          <label for="input_setting">Setting limit Sub Device</label>
-        </FloatLabel>
+          <span class="font-bold">Select area for camera AI detect</span>
+          <SelectArea v-model="form.selected_area" />
+        </div>
 
-        <!-- <FloatLabel variant="on">
-          <InputText id="on_label" v-model="value2" autocomplete="off" />
-          <label for="on_label">On Label</label>
-        </FloatLabel> -->
+        <div v-if="subDeviceData.type === 'sensor'" class="flex flex-col gap-7">
+          <FloatLabel variant="in">
+            <MultiSelect
+              v-model="form.permissions"
+              :options="listUser"
+              id="select_user"
+              optionLabel="name"
+              option-value="id"
+              filter
+              checkmark
+              class="w-full"
+            />
+            <label for="select_user">Select a User for access to Sub Device</label>
+          </FloatLabel>
+
+          <FloatLabel variant="in">
+            <InputText
+              id="input_lower_setting"
+              type="text"
+              v-model="form.lower_limit"
+              class="w-full"
+            />
+
+            <label for="input_lower_setting">Setting lower limit Sub Device</label>
+          </FloatLabel>
+
+          <FloatLabel variant="in">
+            <InputText
+              id="input_upper_setting"
+              type="text"
+              v-model="form.upper_limit"
+              class="w-full"
+            />
+
+            <label for="input_upper_setting">Setting upper limit Sub Device</label>
+          </FloatLabel>
+        </div>
       </div>
 
       <div class="flex gap-1 mt-7 flex-row-reverse">
@@ -156,5 +200,3 @@
     </Dialog>
   </div>
 </template>
-
-<style lang="scss" scoped></style>
