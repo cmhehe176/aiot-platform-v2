@@ -26,7 +26,7 @@
         type: 'bar',
         label: 'Sensor',
         backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
-        data: notificationType.map((noti) => noti.sensor),
+        data: [0,575],
       },
     ],
   }))

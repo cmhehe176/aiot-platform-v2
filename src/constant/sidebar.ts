@@ -18,14 +18,13 @@ export const sidebars: ISidebar[] = [
         key: 'chart',
         icon: 'chart',
       },
-      {
-        label: 'Project Management',
-        name: 'project',
-        key: 'project',
-        icon: 'project',
-        admin: true,
-      },
     ],
+  },
+  {
+    label: 'My Project',
+    name: 'myproject',
+    key: 'myproject',
+    icon: 'myproject',
   },
   {
     label: 'Device',
@@ -46,12 +45,7 @@ export const sidebars: ISidebar[] = [
       },
     ],
   },
-  {
-    label: 'My Project',
-    name: 'myproject',
-    key: 'myproject',
-    icon: 'myproject',
-  },
+
   {
     label: 'Management Support',
     name: 'support',

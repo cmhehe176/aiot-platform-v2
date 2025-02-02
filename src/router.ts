@@ -40,11 +40,6 @@ const router = createRouter({
           name: 'chart',
           component: ChartPage,
         },
-        {
-          path: '/project-management',
-          name: 'project',
-          component: ProjectManagement,
-        },
       ],
     },
 

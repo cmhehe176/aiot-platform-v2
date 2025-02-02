@@ -20,7 +20,7 @@
         label: 'Both Detect',
         backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
         borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        data: objectType.map((object) => object.all),
+        data: [0, 1213],
         stack: 'group1',
       },
       {
@@ -28,7 +28,7 @@
         label: 'Human',
         backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
         borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-        data: objectType.map((object) => object.human),
+        data: [0, 642],
         stack: 'group2',
       },
       {
@@ -36,7 +36,7 @@
         label: 'Vehicle',
         backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
         borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-        data: objectType.map((object) => object.vehicle),
+        data: [0, 312],
         stack: 'group2',
       },
     ],
