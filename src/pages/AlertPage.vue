@@ -12,12 +12,17 @@
   import { ElNotification } from 'element-plus'
   import { sensorService } from '@/service/sensor'
   import { isEqual } from 'lodash'
+  import DetailSensor from '@/component/Alert/DetailSensor.vue'
 
   const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
 
   const tabValue = ref('notification')
   const valueDatePicker = ref()
+  const detailSensor = reactive({
+    isDialog: false,
+    data: undefined,
+  })
 
   const initParams = {
     device_id: undefined,
@@ -223,71 +228,73 @@
 </script>
 
 <template>
-  <FilterProject
-    class="filter-alert"
-    :filter="{
-      project: true,
-      device: true,
-      datePicker: true,
-      typeObject: tabValue === 'object' ? true : false,
-      tabs: true,
-    }"
-    v-model:tabs="tabValue"
-    v-model:device="params.device_id"
-    v-model:project="params.project_id"
-    v-model:date-picker="valueDatePicker"
-    v-model:type-object="params.type"
-    @device="handleFetchApi"
-    @project="handleFetchApi"
-    @type-object="handleFetchApi"
-    @tabs="handleFetchApi"
-  />
+  <div class="alert-page">
+    <FilterProject
+      class="filter-alert"
+      :filter="{
+        project: true,
+        device: true,
+        datePicker: true,
+        typeObject: tabValue === 'object' ? true : false,
+        tabs: true,
+      }"
+      v-model:tabs="tabValue"
+      v-model:device="params.device_id"
+      v-model:project="params.project_id"
+      v-model:date-picker="valueDatePicker"
+      v-model:type-object="params.type"
+      @device="handleFetchApi"
+      @project="handleFetchApi"
+      @type-object="handleFetchApi"
+      @tabs="handleFetchApi"
+    />
 
-  <div class="pb-20">
-    <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
-      <ObjectMessage
-        v-for="data in dataObjects.data"
-        :key="data.id"
-        :alert="data"
-        @accept="handleMessage"
-        @reject="handleMessage"
-      />
+    <div class="pb-20">
+      <div v-if="tabValue === 'object' && isAdmin" class="overflow-y-auto">
+        <ObjectMessage
+          v-for="data in dataObjects.data"
+          :key="data.id"
+          :alert="data"
+          @accept="handleMessage"
+          @reject="handleMessage"
+        />
+      </div>
+
+      <div v-if="tabValue === 'sensor' && isAdmin">
+        <SensorMessage
+          v-for="data in dataSensors.data"
+          :key="data.id"
+          :alert="data"
+          @accept="handleMessage"
+          @reject="handleMessage"
+          @detail="(data) => Object.assign(detailSensor, { isDialog: true, data })"
+        />
+      </div>
+
+      <div v-if="tabValue === 'notification'">
+        <NotificationMessage
+          v-for="data in dataNotifications.data"
+          :key="data.id"
+          :alert="data"
+          @accept="handleMessage"
+          @reject="handleMessage"
+        />
+      </div>
     </div>
 
-    <div v-if="tabValue === 'sensor' && isAdmin">
-      <SensorMessage
-        v-for="data in dataSensors.data"
-        :key="data.id"
-        :alert="data"
-        @accept="handleMessage"
-        @reject="handleMessage"
-      />
-    </div>
+    <Paginator
+      class="fixed w-full bottom-0 right-1 p-4"
+      v-model="params.page"
+      :totalRecords="total"
+      :page="params.page"
+      :rows="params.limit"
+      :rowsPerPageOptions="[5, 10, 25, 40, 50]"
+      @page="handlePageChange"
+    >
+    </Paginator>
 
-    <div v-if="tabValue === 'notification'">
-      <NotificationMessage
-        v-for="data in dataNotifications.data"
-        :key="data.id"
-        :alert="data"
-        @accept="handleMessage"
-        @reject="handleMessage"
-      />
-    </div>
+    <DetailSensor v-model="detailSensor.isDialog" :sensor-data="detailSensor.data" />
   </div>
-
-  <Paginator
-    class="fixed w-full bottom-0 right-1 p-4"
-    v-model="params.page"
-    :totalRecords="total"
-    :page="params.page"
-    :rows="params.limit"
-    :rowsPerPageOptions="[5, 10, 25, 40, 50]"
-    @page="handlePageChange"
-  >
-  </Paginator>
 </template>
 
-<style lang="scss" scoped>
-  .filter-alert {
-  }
-</style>
+<style lang="scss" scoped></style>
