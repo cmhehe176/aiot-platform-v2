@@ -13,6 +13,7 @@
   const date = computed<any>(
     () => formatDate(alert.timestamp, 'HH:mm:ss.SSS - DD/MM/YYYY') || 'inValid Time',
   )
+
   const handleViewVideo = (video: string) => {
     videoUrl.value = video
 
