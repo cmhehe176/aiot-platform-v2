@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import ObjectMessage from '@/component/Alert/ObjectMessage.vue'
   import FilterProject from '@/component/FilterProject.vue'
+  import { sensorService } from '@/service/sensor'
   import { objectService } from '@/service/object'
   import { computed, onMounted, onUnmounted, reactive, ref, toRef, watch } from 'vue'
   import NotificationMessage from '@/component/Alert/NotificationMessage.vue'
@@ -10,9 +11,15 @@
   import { useSocket } from '@/composables/useSocket'
   import { notificationService } from '@/service/notification'
   import { ElNotification } from 'element-plus'
-  import { sensorService } from '@/service/sensor'
   import { isEqual } from 'lodash'
   import DetailSensor from '@/component/Alert/DetailSensor.vue'
+  import DetailNotification from '@/component/Alert/DetailNotification.vue'
+  import type { MessageService } from '@/service/base.message'
+
+  const serviceMap = {
+    sensor: sensorService,
+    object: objectService,
+  }
 
   const { connectSocket, disconnectSocket, onSocket, offSocket } = useSocket()
   const { isAdmin } = storeToRefs(useAuthStore())
@@ -20,6 +27,11 @@
   const tabValue = ref('notification')
   const valueDatePicker = ref()
   const detailSensor = reactive({
+    isDialog: false,
+    data: undefined,
+  })
+
+  const detailNotification = reactive({
     isDialog: false,
     data: undefined,
   })
@@ -155,6 +167,29 @@
     dataSensors.total = total
   }
 
+  const handleDetailNotification = async (notifications) => {
+    if (!notifications?.external_messages) return
+
+    const messageData = await Promise.all(
+      notifications.external_messages.map((noti) => {
+        const service: MessageService = serviceMap[noti.type]
+
+        return service.getDetail(noti.message_id)
+      }),
+    )
+
+    Object.assign(detailNotification, {
+      isDialog: true,
+      data: {
+        ...notifications,
+        message: messageData.map((message) => ({
+          ...message,
+          type: message.message_id.includes('obj') ? 'object' : 'sensor',
+        })),
+      },
+    })
+  }
+
   onMounted(async () => {
     await Promise.all([
       fetchApiNotifications(),
@@ -278,6 +313,7 @@
           :alert="data"
           @accept="handleMessage"
           @reject="handleMessage"
+          @detail="handleDetailNotification"
         />
       </div>
     </div>
@@ -294,6 +330,10 @@
     </Paginator>
 
     <DetailSensor v-model="detailSensor.isDialog" :sensor-data="detailSensor.data" />
+    <DetailNotification
+      v-model="detailNotification.isDialog"
+      :notification-data="detailNotification.data"
+    />
   </div>
 </template>
 
