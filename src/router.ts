@@ -44,7 +44,7 @@ const router = createRouter({
     },
 
     {
-      path: '/xxx',
+      path: '/',
       children: [
         {
           path: '/device',
