@@ -221,7 +221,7 @@
       })
     })
 
-    if (isAdmin.value) return
+    // if (isAdmin.value) return
 
     onSocket('sensorMessage', (payload) => {
       const data = toRef(payload)
