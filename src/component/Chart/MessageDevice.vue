@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-  import type { forEach } from 'lodash'
-  import { computed, onMounted, ref, watch } from 'vue'
+  import { computed, ref } from 'vue'
 
   interface IProps {
     messageDevice: IMessageDevice[]
@@ -84,16 +83,8 @@
 
 <template>
   <div class="message-device">
-    <Fieldset legend="Message Of Device" :toggleable="true">
+    <Fieldset legend="Alert" :toggleable="true">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="min-h-[15rem]" />
     </Fieldset>
   </div>
 </template>
-
-<style lang="scss">
-  .message-device {
-    .p-fieldset {
-      // max-height: 295px;
-    }
-  }
-</style>

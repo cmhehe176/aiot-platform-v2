@@ -191,7 +191,7 @@
       })
     } catch (error) {
       ElNotification({
-        title: 'Không tìm thấy dữ liệu ',
+        title: 'Không tìm thấy dữ liệu',
         message: 'Error',
         type: 'error',
         duration: 1000,
@@ -241,12 +241,12 @@
 
       dataObjects.data = [data.value, ...dataObjects.data]
 
-      ElNotification({
-        title: 'Object',
-        message: 'You have Message for Object',
-        type: 'success',
-        duration: 1000,
-      })
+      // ElNotification({
+      //   title: 'Object',
+      //   message: 'You have Message for Object',
+      //   type: 'success',
+      //   duration: 1000,
+      // })
     })
   })
 

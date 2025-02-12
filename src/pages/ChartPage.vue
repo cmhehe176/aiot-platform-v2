@@ -70,29 +70,17 @@
       @device="handleFetchDetailSensor(modelDevice, modelDatePicker)"
     />
 
-    <div v-if="modelDetailSensor === 1" class="flex gap-24 flex-wrap my-10">
-      <!-- <StatusNotification
-        v-if="dataChart?.notificationStatus && isAdmin"
-        :status-notification="dataChart.notificationStatus.objects"
-        type="Objects"
-      /> -->
-
+    <div v-if="modelDetailSensor === 1" class="flex gap-12 flex-wrap">
       <StatusNotification
         v-if="dataChart?.notificationStatus"
         :status-notification="dataChart.notificationStatus.notifications"
         type="Notification"
       />
 
-      <!-- <StatusNotification
-        v-if="dataChart?.notificationStatus && isAdmin"
-        :status-notification="dataChart.notificationStatus.sensors"
-        type="Sensor"
-      /> -->
-
       <StatusDevice v-if="dataChart?.statusDevice" :status-device="dataChart?.statusDevice" />
 
       <MessageChart
-        class="w-4/6"
+        class="w-2/5"
         v-if="dataChart?.messageDevice"
         :message-device="dataChart?.messageDevice"
       />

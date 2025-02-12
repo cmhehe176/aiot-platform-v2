@@ -54,7 +54,7 @@
     class="edit-project"
     modal
     position="top"
-    header="Send Support"
+    header="Notification"
     :style="{ width: '70vh' }"
     v-on:after-hide="handleCloseDialog"
   >

@@ -13,7 +13,7 @@
     class="edit-project"
     modal
     position="top"
-    header="Send Support"
+    header="Detail Sensor"
     :style="{ width: '70vh' }"
     v-on:after-hide="handleCloseDialog"
   >

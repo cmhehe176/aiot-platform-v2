@@ -11,34 +11,71 @@
 
   const { sensorData } = defineProps<{ sensorData: any }>()
 
-  const chartOptions = ref({
-    maintainAspectRatio: false,
-    aspectRatio: 0.6,
-    plugins: {
-      legend: {
-        labels: {
-          color: textColor,
+  const chartOptions = computed(() => {
+    const annotations = {}
+
+    if (sensorData.lower_limit) {
+      annotations['line1'] = {
+        type: 'line',
+        yMin: sensorData.lower_limit,
+        yMax: sensorData.lower_limit,
+        borderColor: 'green',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        label: {
+          enabled: true,
+          content: 'Ngưỡng dưới',
+        },
+      }
+    }
+
+    if (sensorData.upper_limit) {
+      annotations['line2'] = {
+        type: 'line',
+        yMin: sensorData.upper_limit,
+        yMax: sensorData.upper_limit,
+        borderColor: 'red',
+        borderWidth: 3,
+        borderDash: [5, 5],
+        label: {
+          enabled: true,
+          content: 'Ngưỡng trên',
+        },
+      }
+    }
+
+    return {
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
+        },
+        annotation: {
+          annotations,
         },
       },
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: textColorSecondary,
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
         },
-        grid: {
-          color: surfaceBorder,
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
         },
       },
-      y: {
-        ticks: {
-          color: textColorSecondary,
-        },
-        grid: {
-          color: surfaceBorder,
-        },
-      },
-    },
+    }
   })
 
   const chartData = computed(() => ({

@@ -12,6 +12,11 @@ import App from './App.vue'
 import router from './router'
 import socketPlugin from '@/plugin/socket'
 
+import { Chart as ChartJS } from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
+
+ChartJS.register(annotationPlugin)
+
 const app = createApp(App)
 const pinia = createPinia()
 

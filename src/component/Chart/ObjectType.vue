@@ -20,7 +20,7 @@
         label: 'Both Detect',
         backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
         borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        data: [0, 1213],
+        data: objectType.map((object) => object.all),
         stack: 'group1',
       },
       {
@@ -28,7 +28,7 @@
         label: 'Human',
         backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
         borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-        data: [0, 642],
+        data: objectType.map((object) => object.human),
         stack: 'group2',
       },
       {
@@ -36,7 +36,7 @@
         label: 'Vehicle',
         backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
         borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-        data: [0, 312],
+        data: objectType.map((object) => object.vehicle),
         stack: 'group2',
       },
     ],
@@ -95,7 +95,7 @@
 
 <template>
   <div class="object-type w-1/2">
-    <Fieldset legend="Type Of Object" :toggleable="true">
+    <Fieldset legend="Type Detect">
       <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[15rem]" />
     </Fieldset>
   </div>

@@ -28,12 +28,19 @@
   const form = reactive({ ...initForm })
 
   const handleSetting = async (data) => {
+    console.log(typeof data.selected_area)
+
     subDeviceData.value = undefined
     Object.assign(form, initForm)
 
     isDialog.value = !isDialog.value
     subDeviceData.value = data
+
     form.type = data.type
+    form.lower_limit = data.lower_limit
+    form.upper_limit = data.upper_limit
+    form.detection_timer = data.detection_timer
+    form.selected_area = JSON.parse(data.selected_area)
 
     if (data.permissions && Array.isArray(data.permissions)) {
       form.permissions = data.permissions
@@ -56,29 +63,21 @@
     const affected = await deviceService.updateSubDevice(subDeviceData.value.id, form)
 
     ElNotification({
-      title: affected ? 'Save Sub Device Successfull' : 'Has Error In save Sub Device',
-      message: affected ? 'Successfull' : 'Error',
+      title: affected ? 'Save Sub Device Successfull' : 'Has Error in Save',
+      message: affected ? 'Successfull' : `Device isn't Active`,
       type: affected ? 'success' : 'error',
       duration: 1000,
     })
 
     if (affected) isDialog.value = false
+
+    listSubDevice.value = await deviceService.getListSubDevice()
   }
 
   onMounted(async () => {
     listSubDevice.value = await deviceService.getListSubDevice()
     listUser.value = await userService.getAllUser()
   })
-
-  // const title = computed({
-  //   get() {
-  //     return form.title
-  //   },
-
-  //   set(newValue) {
-  //     form.title = newValue.trimStart().replace(/  +/g, ' ')
-  //   },
-  // })
 </script>
 
 <template>
@@ -127,7 +126,7 @@
     <Dialog
       v-model:visible="isDialog"
       modal
-      header="Setting Device"
+      :header="`Setting Sub-Device ${subDeviceData?.name}`"
       :style="{ width: '40rem' }"
       position="top"
     >
@@ -145,7 +144,7 @@
           </FloatLabel>
 
           <span class="font-bold">Select area for camera AI detect</span>
-          <SelectArea v-model="form.selected_area" />
+          <SelectArea v-model="form.selected_area" :initialHull="form.selected_area" />
         </div>
 
         <div v-if="subDeviceData.type === 'sensor'" class="flex flex-col gap-7">
