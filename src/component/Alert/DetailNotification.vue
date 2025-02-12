@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
   import videojs from 'video.js'
 
   const isDialog = defineModel({ default: false })
@@ -25,6 +25,11 @@
   const handleCloseDialog = () => {
     isDialog.value = false
   }
+
+  watch(
+    () => type[0],
+    (newValue) => (tab.value = newValue),
+  )
 
   const videoPlayer = ref<HTMLVideoElement | null>(null)
 
