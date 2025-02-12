@@ -1,13 +1,12 @@
 <script lang="ts" setup>
   import { computed, onMounted, ref } from 'vue'
   import videojs from 'video.js'
-  import LeafletMap from '../LeafletMap.vue'
 
   const isDialog = defineModel({ default: false })
   const isDialogPreview = ref(false)
   const videoUrl = ref<any>(null)
 
-  const { notificationData } = defineProps<{ notificationData: any }>()
+  const { notificationData, type } = defineProps<{ notificationData: any; type: any[] }>()
 
   const typeMessage = computed(() =>
     notificationData.external_messages.map((message) => message.type),
@@ -21,7 +20,7 @@
     () => notificationData.message.filter((message) => message.type === 'sensor')[0],
   )
 
-  const tab = ref('object')
+  const tab = ref(type[0])
 
   const handleCloseDialog = () => {
     isDialog.value = false
@@ -36,8 +35,6 @@
   }
 
   onMounted(() => {
-    if (!objectData.value) tab.value = 'sensor'
-
     if (videoPlayer.value) {
       videojs(videoPlayer.value, {
         controls: true,

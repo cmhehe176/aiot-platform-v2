@@ -28,8 +28,6 @@
   const form = reactive({ ...initForm })
 
   const handleSetting = async (data) => {
-    console.log(typeof data.selected_area)
-
     subDeviceData.value = undefined
     Object.assign(form, initForm)
 
@@ -40,7 +38,7 @@
     form.lower_limit = data.lower_limit
     form.upper_limit = data.upper_limit
     form.detection_timer = data.detection_timer
-    form.selected_area = JSON.parse(data.selected_area)
+    form.selected_area = data.selected_area ? JSON.parse(data.selected_area) : []
 
     if (data.permissions && Array.isArray(data.permissions)) {
       form.permissions = data.permissions
@@ -144,7 +142,7 @@
           </FloatLabel>
 
           <span class="font-bold">Select area for camera AI detect</span>
-          <SelectArea v-model="form.selected_area" :initialHull="form.selected_area" />
+          <SelectArea v-model="form.selected_area" :initialHull="form.selected_area || []" />
         </div>
 
         <div v-if="subDeviceData.type === 'sensor'" class="flex flex-col gap-7">

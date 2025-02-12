@@ -175,7 +175,10 @@
         notifications.external_messages.map((noti) => {
           const service: MessageService = serviceMap[noti.type]
 
-          return service.getDetail(noti.message_id)
+          return service.getDetail({
+            message_id: noti.message_id,
+            device_id: notifications.device_id,
+          })
         }),
       )
 
@@ -187,6 +190,7 @@
             ...message,
             type: message.message_id.includes('obj') ? 'object' : 'sensor',
           })),
+          type: notifications.external_messages.map((noti) => noti.type),
         },
       })
     } catch (error) {
@@ -335,8 +339,7 @@
       :rows="params.limit"
       :rowsPerPageOptions="[5, 10, 25, 40, 50, 100]"
       @page="handlePageChange"
-    >
-    </Paginator>
+    />
 
     <DetailSensor
       v-if="detailSensor.data"
@@ -348,6 +351,7 @@
       v-if="detailNotification.data"
       v-model="detailNotification.isDialog"
       :notification-data="detailNotification.data"
+      :type="detailNotification.data.type"
     />
   </div>
 </template>
