@@ -36,6 +36,8 @@
   }
 
   onMounted(() => {
+    if (!objectData.value) tab.value = 'sensor'
+
     if (videoPlayer.value) {
       videojs(videoPlayer.value, {
         controls: true,
@@ -60,7 +62,7 @@
       <div>
         <SelectButton v-model="tab" :options="typeMessage" />
 
-        <div v-if="tab === 'object'">
+        <div v-if="tab === 'object' && objectData">
           <div class="flex gap-2 flex-col">
             <h1>Device Information :</h1>
 
@@ -100,7 +102,7 @@
           </div>
         </div>
 
-        <div v-if="tab === 'sensor'">
+        <div v-if="tab === 'sensor' && sensorData">
           <div class="flex gap-2 flex-col">
             <h1>Device Information :</h1>
 

@@ -136,12 +136,12 @@
         return
     }
 
-    ElNotification({
-      title: 'Refresh Data',
-      message: 'Success',
-      type: 'success',
-      duration: 1000,
-    })
+    // ElNotification({
+    //   title: 'Refresh Data',
+    //   message: 'Success',
+    //   type: 'success',
+    //   duration: 1000,
+    // })
 
     return
   }
@@ -170,24 +170,33 @@
   const handleDetailNotification = async (notifications) => {
     if (!notifications?.external_messages) return
 
-    const messageData = await Promise.all(
-      notifications.external_messages.map((noti) => {
-        const service: MessageService = serviceMap[noti.type]
+    try {
+      const messageData = await Promise.all(
+        notifications.external_messages.map((noti) => {
+          const service: MessageService = serviceMap[noti.type]
 
-        return service.getDetail(noti.message_id)
-      }),
-    )
+          return service.getDetail(noti.message_id)
+        }),
+      )
 
-    Object.assign(detailNotification, {
-      isDialog: true,
-      data: {
-        ...notifications,
-        message: messageData.map((message) => ({
-          ...message,
-          type: message.message_id.includes('obj') ? 'object' : 'sensor',
-        })),
-      },
-    })
+      Object.assign(detailNotification, {
+        isDialog: true,
+        data: {
+          ...notifications,
+          message: messageData.map((message) => ({
+            ...message,
+            type: message.message_id.includes('obj') ? 'object' : 'sensor',
+          })),
+        },
+      })
+    } catch (error) {
+      ElNotification({
+        title: 'Không tìm thấy dữ liệu ',
+        message: 'Error',
+        type: 'error',
+        duration: 1000,
+      })
+    }
   }
 
   onMounted(async () => {
@@ -324,13 +333,19 @@
       :totalRecords="total"
       :page="params.page"
       :rows="params.limit"
-      :rowsPerPageOptions="[5, 10, 25, 40, 50]"
+      :rowsPerPageOptions="[5, 10, 25, 40, 50, 100]"
       @page="handlePageChange"
     >
     </Paginator>
 
-    <DetailSensor v-model="detailSensor.isDialog" :sensor-data="detailSensor.data" />
+    <DetailSensor
+      v-if="detailSensor.data"
+      v-model="detailSensor.isDialog"
+      :sensor-data="detailSensor.data"
+    />
+
     <DetailNotification
+      v-if="detailNotification.data"
       v-model="detailNotification.isDialog"
       :notification-data="detailNotification.data"
     />

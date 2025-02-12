@@ -23,7 +23,6 @@ export class MessageService {
   }
 
   async getDetail(payload: any) {
-    console.log(' noti.message_id', payload)
     try {
       const response = await this.axiosInstance.get(`/${this.name}/detail`, {
         params: { message_id: payload },
