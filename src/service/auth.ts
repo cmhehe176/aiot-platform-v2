@@ -49,6 +49,20 @@ class AuthService {
       console.error(error)
     }
   }
+
+  async forgotPass(data: { email: string }) {
+    try {
+      const response = await this.axiosIstance.post('/auth/forgot-password', data)
+
+      if (response.data) {
+        return response.data
+      }
+
+      return response
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const authService = new AuthService(api)

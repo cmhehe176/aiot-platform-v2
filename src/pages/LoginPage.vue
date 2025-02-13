@@ -2,7 +2,7 @@
   import { reactive, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import { authService } from '@/service/auth'
-  import { ElMessage } from 'element-plus'
+  import { ElMessage, ElNotification } from 'element-plus'
   import { useAuthStore } from '@/stores/auth'
   import BaseIcon from '@/component/BaseIcon.vue'
 
@@ -11,6 +11,8 @@
 
   const isLogin = ref(true)
   const loading = ref(false)
+
+  const isDialog = ref(false)
 
   const formLogin = reactive({
     username: '',
@@ -23,6 +25,8 @@
     telephone: '',
     password: '',
   })
+
+  const formForgot = ref('')
 
   const onSubmit = async () => {
     loading.value = true
@@ -45,9 +49,26 @@
     }
 
     const res = await authService.registryUser(formRegister)
-    if (!res) return
 
-    ElMessage({ message: 'Đăng ký thành công', type: 'success' })
+    if (!res) {
+      ElNotification({
+        title: 'Đăng ký thất bại',
+        message: 'Hãy thử lại Email hoặc số điện thoại khác',
+        type: 'error',
+        duration: 3000,
+      })
+
+      loading.value = false
+
+      return
+    }
+
+    ElNotification({
+      title: 'Đăng ký thành công',
+      message: 'Success',
+      type: 'success',
+      duration: 1000,
+    })
 
     isLogin.value = true
 
@@ -60,6 +81,36 @@
     })
 
     loading.value = false
+  }
+
+  const openForgorPass = async () => {
+    isDialog.value = true
+  }
+
+  const submitForgotPass = async () => {
+    loading.value = true
+
+    try {
+      await authService.forgotPass({ email: formForgot.value })
+
+      isDialog.value = false
+
+      ElNotification({
+        title: 'Đã gửi Email xác nhận',
+        message: 'Vui lòng check Mail',
+        type: 'success',
+        duration: 3000,
+      })
+    } catch (error) {
+      ElNotification({
+        title: 'Lấy lại mật khẩu thất bại',
+        message: 'Hãy thử lại Email khác',
+        type: 'error',
+        duration: 3000,
+      })
+    } finally {
+      loading.value = false
+    }
   }
 </script>
 
@@ -136,7 +187,7 @@
 
       <template #footer>
         <div class="flex gap-5 absolute bottom-3 right-5">
-          <Button label="Forgot Password ?" variant="text" />
+          <Button label="Forgot Password ?" variant="text" @click="openForgorPass" />
 
           <Button
             :label="isLogin ? 'Register ?' : ' Login ?'"
@@ -155,6 +206,43 @@
       </template>
     </Card>
   </div>
+
+  <Dialog
+    v-model:visible="isDialog"
+    class="edit-project"
+    modal
+    header="Forgot Password"
+    :style="{ width: '50vh' }"
+  >
+    <div class="flex flex-col gap-[35px]">
+      <IftaLabel>
+        <InputText id="formForgot" v-model="formForgot" />
+        <label for="formForgot">Email :</label>
+      </IftaLabel>
+
+      <!-- button accept or cancel -->
+      <div class="flex justify-end">
+        <Button
+          class="w-28"
+          label="Cancel"
+          text
+          outlined
+          severity="secondary"
+          @click="isDialog = !isDialog"
+        />
+
+        <Button
+          class="w-28"
+          label="Submit"
+          text
+          outlined
+          :loading="loading"
+          severity="info"
+          @click="submitForgotPass"
+        />
+      </div>
+    </div>
+  </Dialog>
 </template>
 
 <style lang="scss">
