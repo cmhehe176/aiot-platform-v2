@@ -107,7 +107,7 @@
     }
 
     ElNotification({
-      title: status === 1 ? 'Accept' : 'Reject',
+      title: status === 1 ? '✅ Accept' : '❌ Reject',
       message: 'Success',
       type: 'success',
       duration: 1000,
@@ -218,7 +218,7 @@
       dataNotifications.data = [data.value, ...dataNotifications.data]
 
       ElNotification({
-        title: 'Notification',
+        title: '🚀 Notification',
         message: 'You have Message for Notification',
         type: 'success',
         duration: 1000,
@@ -232,12 +232,12 @@
 
       dataSensors.data = [data.value, ...dataSensors.data]
 
-      ElNotification({
-        title: 'Sensor',
-        message: 'You have Message for Object Sensor',
-        type: 'success',
-        duration: 1000,
-      })
+      // ElNotification({
+      //   title: 'Sensor',
+      //   message: 'You have Message for Object Sensor',
+      //   type: 'success',
+      //   duration: 1000,
+      // })
     })
 
     onSocket('objectMessage', (payload) => {
@@ -245,12 +245,12 @@
 
       dataObjects.data = [data.value, ...dataObjects.data]
 
-      // ElNotification({
-      //   title: 'Object',
-      //   message: 'You have Message for Object',
-      //   type: 'success',
-      //   duration: 1000,
-      // })
+      ElNotification({
+        title: '📸 Object',
+        message: 'You have Message for Object',
+        type: 'success',
+        duration: 1000,
+      })
     })
   })
 
