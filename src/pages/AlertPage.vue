@@ -227,19 +227,19 @@
       })
     })
 
-    // if (isAdmin.value) return
+    if (!isAdmin.value) return
 
     onSocket('sensorMessage', (payload) => {
       const data = toRef(payload)
       data.value.timestamp = new Date()
       dataSensors.data = [data.value, ...dataSensors.data]
 
-      // ElNotification({
-      //   title: 'Sensor',
-      //   message: 'You have Message for Object Sensor',
-      //   type: 'success',
-      //   duration: 1000,
-      // })
+      ElNotification({
+        title: 'Sensor',
+        message: 'You have Message for Sensor',
+        type: 'success',
+        duration: 1000,
+      })
     })
 
     onSocket('objectMessage', (payload) => {
@@ -358,5 +358,3 @@
     />
   </div>
 </template>
-
-<style lang="scss" scoped></style>
