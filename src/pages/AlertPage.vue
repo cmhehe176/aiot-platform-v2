@@ -15,6 +15,7 @@
   import DetailSensor from '@/component/Alert/DetailSensor.vue'
   import DetailNotification from '@/component/Alert/DetailNotification.vue'
   import type { MessageService } from '@/service/base.message'
+  import { formatDate } from '@/utils/dayjs'
 
   const serviceMap = {
     sensor: sensorService,
@@ -214,6 +215,7 @@
 
     onSocket('notificationMessage', (payload) => {
       const data = toRef(payload)
+      data.value.timestamp = formatDate(data.value.timestamp)
 
       dataNotifications.data = [data.value, ...dataNotifications.data]
 
@@ -221,7 +223,7 @@
         title: '🚀 Notification',
         message: 'You have Message for Notification',
         type: 'success',
-        duration: 1000,
+        duration: 2000,
       })
     })
 
@@ -229,6 +231,7 @@
 
     onSocket('sensorMessage', (payload) => {
       const data = toRef(payload)
+      data.value.timestamp = formatDate(data.value.timestamp)
 
       dataSensors.data = [data.value, ...dataSensors.data]
 
@@ -242,6 +245,7 @@
 
     onSocket('objectMessage', (payload) => {
       const data = toRef(payload)
+      data.value.timestamp = formatDate(data.value.timestamp)
 
       dataObjects.data = [data.value, ...dataObjects.data]
 
