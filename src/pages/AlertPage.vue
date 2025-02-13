@@ -215,7 +215,7 @@
 
     onSocket('notificationMessage', (payload) => {
       const data = toRef(payload)
-      data.value.timestamp = formatDate(data.value.timestamp)
+      data.value.timestamp = new Date()
 
       dataNotifications.data = [data.value, ...dataNotifications.data]
 
@@ -231,8 +231,7 @@
 
     onSocket('sensorMessage', (payload) => {
       const data = toRef(payload)
-      data.value.timestamp = formatDate(data.value.timestamp)
-
+      data.value.timestamp = new Date()
       dataSensors.data = [data.value, ...dataSensors.data]
 
       // ElNotification({
@@ -245,7 +244,7 @@
 
     onSocket('objectMessage', (payload) => {
       const data = toRef(payload)
-      data.value.timestamp = formatDate(data.value.timestamp)
+      data.value.timestamp = new Date()
 
       dataObjects.data = [data.value, ...dataObjects.data]
 
