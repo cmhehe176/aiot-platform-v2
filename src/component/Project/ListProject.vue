@@ -45,12 +45,16 @@
   }
 
   const handleDetail = async (data) => {
-    isDialogDetail.value = true
+    try {
+      isDialogDetail.value = true
 
-    projectDetail.value = data
-    const listUserInProject = await projectService.userInProject(data.id)
+      projectDetail.value = data
+      const listUserInProject = await projectService.userInProject(data.id)
 
-    projectDetail.value.users = listUserInProject
+      projectDetail.value.users = listUserInProject
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleEdit = async (data) => {
@@ -216,26 +220,26 @@
         <!-- Project Name -->
         <div class="flex justify-between">
           <span class="font-bold">Project Name:</span>
-          <span>{{ projectDetail.name }}</span>
+          <span>{{ projectDetail?.name }}</span>
         </div>
 
         <!-- Created By -->
-        <div class="flex justify-between">
+        <div v-if="projectDetail?.createdBy" class="flex justify-between">
           <span class="font-bold">Created By:</span>
-          <span>{{ projectDetail.createdBy.name }}</span>
+          <span>{{ projectDetail?.createdBy?.name }}</span>
         </div>
 
         <!-- Created At -->
         <div class="flex justify-between">
           <span class="font-bold">Created At:</span>
-          <span>{{ formatDate(projectDetail.createdAt) }}</span>
+          <span>{{ formatDate(projectDetail?.createdAt) }}</span>
         </div>
 
         <!-- Description -->
         <div class="flex flex-col">
           <span class="font-bold">Description:</span>
-          <p v-if="projectDetail.description" class="text-justify">
-            {{ projectDetail.description }}
+          <p v-if="projectDetail?.description" class="text-justify">
+            {{ projectDetail?.description }}
           </p>
           <p v-else class="italic text-gray-500">No description available.</p>
         </div>

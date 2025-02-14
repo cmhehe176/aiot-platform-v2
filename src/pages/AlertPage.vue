@@ -15,8 +15,6 @@
   import DetailSensor from '@/component/Alert/DetailSensor.vue'
   import DetailNotification from '@/component/Alert/DetailNotification.vue'
   import type { MessageService } from '@/service/base.message'
-  import { formatDate } from '@/utils/dayjs'
-
   const serviceMap = {
     sensor: sensorService,
     object: objectService,
@@ -205,11 +203,8 @@
   }
 
   onMounted(async () => {
-    await Promise.all([
-      fetchApiNotifications(),
-      isAdmin.value ? fetchApiObjects() : '',
-      isAdmin.value ? fetchApiSensors() : '',
-    ])
+    if (isAdmin.value)
+      await Promise.all([fetchApiNotifications(), fetchApiObjects(), fetchApiSensors()])
 
     connectSocket()
 
@@ -268,7 +263,12 @@
   watch(
     () => valueDatePicker.value,
     (newValue) => {
-      if (newValue.length < 2) return
+      if (!newValue) return
+
+      if (Array.isArray(newValue) && newValue?.length < 2) {
+        valueDatePicker.value = null
+        return
+      }
 
       params.start = newValue[0]
       params.end = newValue[1]

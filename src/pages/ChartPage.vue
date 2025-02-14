@@ -44,7 +44,9 @@
     dataDetailSensor.value = res
   }
 
-  onMounted(async () => await handleFetchDashboard(modelProject.value))
+  onMounted(async () => {
+    if (isAdmin.value) await handleFetchDashboard(modelProject.value)
+  })
 </script>
 
 <template>

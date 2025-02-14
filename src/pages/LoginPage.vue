@@ -171,7 +171,7 @@
 
             <FloatLabel variant="on" security="info" class="w-full">
               <Password
-                v-model="formLogin.password"
+                v-model="formRegister.password"
                 id="password"
                 name="password"
                 placeholder="Password"

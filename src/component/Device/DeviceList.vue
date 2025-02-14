@@ -14,7 +14,7 @@
   const { devices } = defineProps<{ devices: any }>()
 
   const handleActiveDevice = async (status: boolean, deviceId: number) => {
-    if (!status) return
+    if (!status || !isAdmin.value) return
 
     const res = await deviceService.turnOffDevice(deviceId)
 
