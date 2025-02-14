@@ -45,7 +45,7 @@
 
 <template>
   <div class="device-page">
-    <DeviceList :devices="devices" />
+    <DeviceList :devices="devices" @turnOffDevice="handleFetchDevice" />
 
     <DeviceDialog @updateDeviceSuccess="handleFetchDevice" />
   </div>

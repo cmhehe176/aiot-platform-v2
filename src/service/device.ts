@@ -56,6 +56,16 @@ class DeviceService {
       console.error(error)
     }
   }
+
+  turnOffDevice = async (id) => {
+    try {
+      const res = await this.axiosInstance.put(`/device/status/${id}`)
+
+      if (res.data) return res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const deviceService = new DeviceService(api)

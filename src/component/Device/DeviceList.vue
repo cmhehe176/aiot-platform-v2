@@ -3,11 +3,37 @@
   import { storeToRefs } from 'pinia'
   import { formatDate } from '@/utils/dayjs'
   import { emitter } from '@/utils/mitt'
+  import { ref } from 'vue'
+  import { deviceService } from '@/service/device'
+  import { ElNotification } from 'element-plus'
 
   const authStore = useAuthStore()
   const { isAdmin } = storeToRefs(authStore)
+  const emit = defineEmits(['turnOffDevice'])
 
   const { devices } = defineProps<{ devices: any }>()
+
+  const handleActiveDevice = async (status: boolean, deviceId: number) => {
+    if (!status) return
+
+    const res = await deviceService.turnOffDevice(deviceId)
+
+    if (!res)
+      return ElNotification({
+        title: 'Turn Off Device Error',
+        message: 'Error',
+        type: 'error',
+        duration: 2000,
+      })
+
+    emit('turnOffDevice')
+    ElNotification({
+      title: 'Turn Off Device',
+      message: 'Success',
+      type: 'success',
+      duration: 2000,
+    })
+  }
 </script>
 
 <template>
@@ -24,8 +50,25 @@
             onLabel="Active"
             offLabel="InActive"
             class="w-36"
-            disabled
+            readonly
+            @click="handleActiveDevice(data.isActive, data.id)"
           />
+
+          <!-- <Dialog
+            v-model:visible="isDialog"
+            modal
+            header="Confirm turn off Device"
+            :style="{ width: '50vh' }"
+          >
+            <Button
+              class="w-28"
+              label="Submit"
+              text
+              outlined
+              severity="info"
+              @click="handleSubmit"
+            />
+          </Dialog> -->
         </template>
       </Column>
 
